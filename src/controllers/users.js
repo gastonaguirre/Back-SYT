@@ -65,4 +65,30 @@ const deleteIdUser = async (req, res) => {
   }
 };
 
-module.exports = { getUsers, deleteIdUser, postUser, perfilUser };
+const editUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, apellido } = req.body;
+    const findUser = await Users.findByPk(id);
+
+    if (findUser) {
+      const userEdited = await Users.update({
+        name,
+        apellido,
+      },{
+        where:{
+          id:id
+        }
+      });
+      res.status(200).json("Cambios guardados");
+    } else {
+      throw new Error(
+        "No se ha encontrado un usuario existente con el id ingresado."
+      );
+    }
+  } catch (err) {
+    res.status(400).send(`${err.message}`);
+  }
+};
+
+module.exports = { getUsers, deleteIdUser, postUser, perfilUser, editUser };
