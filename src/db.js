@@ -27,7 +27,7 @@ let sequelize =
         },
         ssl: true
       })
-    : new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/syt`, {
+    : new Sequelize(`postgresql://postgres:6tCmTfvSnaJIn30Vk3Zf@containers-us-west-52.railway.app:5698/railway`, {
         logging: false,
         native: false
       });
