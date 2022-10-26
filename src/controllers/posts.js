@@ -38,6 +38,7 @@ const postOFPost = async(req, res )=>{
     }catch(error){
         throw new Error ("algo salio mal ")
     }
+    
 }
 /////////////////////////////////////////////////
 
