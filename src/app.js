@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const users = require('./routes/users.js');
+const posts = require('./routes/posts.js');
 
 require('./db.js');
 
@@ -23,7 +24,7 @@ server.use((req, res, next) => {
 });
 
 server.use('/users', users);
-
+server.use("/posts", posts)
 // Error catching endware.
 server.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
   const status = err.status || 500;
