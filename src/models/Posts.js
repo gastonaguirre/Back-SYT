@@ -3,8 +3,8 @@ module.exports = (sequelize) => {
   sequelize.define('posts', {
 
     id:{
-      type:DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type:DataTypes.INTEGER,
+      autoIncrement:true,
       allowNull: false,
       primaryKey: true
     },
@@ -21,7 +21,11 @@ module.exports = (sequelize) => {
     
     media: {
         type: DataTypes.STRING
-    }
+    },
+
+    foto:{
+     type: DataTypes.TEXT,
+    },
 
   },{timestamps: false});
 };
