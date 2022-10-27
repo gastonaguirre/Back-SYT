@@ -2,12 +2,12 @@ const { DataTypes, UUIDV4 } = require('sequelize');
 module.exports = (sequelize) => {
   sequelize.define('posts', {
 
-    id:{
-      type:DataTypes.INTEGER,
-      autoIncrement:true,
-      allowNull: false,
-      primaryKey: true
-    },
+    // id:{
+    //   type:DataTypes.INTEGER,
+    //   autoIncrement:true,
+    //   allowNull: false,
+    //   primaryKey: true
+    // },
 
     titulo: {
         type:DataTypes.STRING,

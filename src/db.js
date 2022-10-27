@@ -58,8 +58,8 @@ const { Posts, Users } = sequelize.models;
 
 
 // Aca vendrian las relaciones
-Users.belongsToMany(Posts, {through: "User_Posts"});
-Posts.belongsToMany(Users, {through: "User_Posts"}); //! no va estoy probando y no conecta host 
+Users.hasMany(Posts);
+Posts.belongsTo(Users);
 
 
 

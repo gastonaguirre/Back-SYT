@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const {
   getAllPost,
-  postOFPost,
+  createPost,
   detailPost,
   eliminarPost,
   editPost,
@@ -11,7 +11,7 @@ const router = Router();
 
 router.get("/", getAllPost);
 router.get("/:id", detailPost);
-router.post("/", postOFPost);
+router.post("/", createPost);
 router.delete("/:id", eliminarPost);
 router.patch("/:id", editPost);
 
