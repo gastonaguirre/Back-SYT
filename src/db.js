@@ -58,6 +58,8 @@ const { Posts, Users } = sequelize.models;
 
 
 // Aca vendrian las relaciones
+Users.hasMany(Posts);
+Posts.belongsTo(Users);
 
 
 

@@ -1,6 +1,6 @@
 const { DataTypes, UUIDV4 } = require('sequelize');
 module.exports = (sequelize) => {
-  sequelize.define('posts', {
+  sequelize.define('categories', {
 
     // id:{
     //   type:DataTypes.INTEGER,
@@ -9,23 +9,10 @@ module.exports = (sequelize) => {
     //   primaryKey: true
     // },
 
-    titulo: {
+    name: {
         type:DataTypes.STRING,
-        allowNull: null
-    },
-
-    texto: {
-      type: DataTypes.TEXT,
-      allowNull: true
-    },
-    
-    media: {
-        type: DataTypes.STRING
-    },
-
-    foto:{
-     type: DataTypes.TEXT,
-    },
+        allowNull: null   
+      },
 
   },{timestamps: false});
 };
