@@ -28,6 +28,7 @@ let sequelize =
         ssl: true
       })
     : new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/syt`, {
+
         logging: false,
         native: false
       });
