@@ -33,13 +33,17 @@ const perfilUser = async (req, res) => {
 
 const postUser = async (req, res) => {
   try {
-    let { name, apellido } = req.body;
+    let { name, apellido, descripcion } = req.body;
     let createUser = await Users.create({
       name,
       apellido,
+      descripcion
     });
 
-    res.status(200).send("Usuario Creado Exitosamente" + createUser);
+    res.status(200).send({
+      msg:"Usuario Creado Exitosamente", 
+      user:createUser
+    });
   } catch (err) {
     res.status(400).send(err);
     console.log(err);
@@ -68,18 +72,18 @@ const deleteIdUser = async (req, res) => {
 const editUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, apellido } = req.body;
+    const { name, apellido, descripcion } = req.body;
     const findUser = await Users.findByPk(id);
-
+    
     if (findUser) {
-      const userEdited = await Users.update({
-        name,
-        apellido,
-      },{
-        where:{
-          id:id
-        }
-      });
+
+      const fields = {}
+      if(name) fields.name = name;
+      if(apellido) fields.apellido = apellido;
+      if(descripcion) fields.descripcion = descripcion;
+
+      const userEdited = await Users.update(fields,{where:{id:id}});
+
       res.status(200).json("Cambios guardados");
     } else {
       throw new Error(
