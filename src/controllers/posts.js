@@ -1,6 +1,6 @@
 const { Posts } = require("../db");
 
-//////// get de todos los post
+
 const getAllPost = async (req, res) => {
   try {
     const data = await Posts.findAll();
@@ -14,8 +14,8 @@ const getAllPost = async (req, res) => {
     console.log(error);
   }
 };
-///////////////////////////// post  para crear Post del model de la base de datos
-const postOFPost = async (req, res) => {
+
+const createPost = async (req, res) => {
   try {
     const { titulo, texto, media } = req.body;
 
@@ -39,9 +39,7 @@ const postOFPost = async (req, res) => {
     throw new Error("algo salio mal ");
   }
 };
-/////////////////////////////////////////////////
 
-/////////////////////////////// ruta para ver un post por id basicamente el datalle de ese id q buscan
 const detailPost = async (req, res) => {
   try {
     let { id } = req.params;
@@ -57,7 +55,6 @@ const detailPost = async (req, res) => {
   }
 };
 
-/////////////////////////// ruta para eliminar las Post
 const eliminarPost = async (req, res) => {
   try {
     let { id } = req.params;
@@ -76,8 +73,6 @@ const eliminarPost = async (req, res) => {
     console.log(error);
   }
 };
-
-/////////////////////////// ruta para hacer cambios en los Post
 
 const editPost = async (req, res) => {
   try {
@@ -110,4 +105,4 @@ const editPost = async (req, res) => {
   }
 };
 
-module.exports = { getAllPost, postOFPost, detailPost, eliminarPost, editPost };
+module.exports = { getAllPost, createPost, detailPost, eliminarPost, editPost };

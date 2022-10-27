@@ -75,12 +75,14 @@ const editUser = async (req, res) => {
       if(apellido) fields.apellido = apellido;
       if(descripcion) fields.descripcion = descripcion;
 
-      await findUser.update(fields);
-
-      res.status(200).json({
-        msg:"Cambios guardados",
-        user: findUser
-      });
+      if (fields !== {}){
+        await findUser.update(fields)
+        res.status(200).json({
+          msg:"Cambios guardados",
+          user: findUser
+        })
+      }
+      else res.status(400).send({msg: "No se ingresaron cambios"})
     } else {
       res.status(404).send({
         msg: "No se ha encontrado un usuario existente con el id ingresado."
