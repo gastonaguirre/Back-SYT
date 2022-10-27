@@ -3,8 +3,8 @@ module.exports = (sequelize) => {
   sequelize.define('users', {
 
     id:{
-      type:DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type:DataTypes.INTEGER,
+      autoIncrement:true,
       allowNull: false,
       primaryKey: true
     },
@@ -27,6 +27,10 @@ module.exports = (sequelize) => {
             value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
         });
       }
-    }
+    },
+
+    descripcion:{
+     type: DataTypes.TEXT,
+    },
   },{timestamps: false});
 };
