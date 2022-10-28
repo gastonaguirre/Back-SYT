@@ -3,7 +3,7 @@ const { Posts, Users } = require("../db");
 const getAllPost = async (req, res) => {
   try {
     const data = await Posts.findAll();
-    console.log(data);
+
     if (data) {
       res.status(200).json(data);
     } else {
@@ -29,7 +29,7 @@ const createPost = async (req, res) => {
    
     if(!newPost) throw new Error("No se pudo crear el post")
   
-    console.log(userId);
+
     user.addPosts(newPost);
 
     res.status(200).send({
@@ -37,7 +37,7 @@ const createPost = async (req, res) => {
       post:newPost
     });
   } catch (err) {
-    console.log(err)
+ 
     res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   }
 };
@@ -47,7 +47,7 @@ const detailPost = async (req, res) => {
     let { id } = req.params;
     if (id) {
       let buscarid = await Posts.findByPk(id);
-      console.log(buscarid);
+ 
       res.status(200).json(buscarid);
     } else {
       res.status(400).json({ msg: "Falta id pa" });
