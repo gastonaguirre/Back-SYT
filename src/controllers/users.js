@@ -1,4 +1,4 @@
-const { Users } = require("../db");
+const { Users, Posts } = require("../db");
 
 const getUsers = async (req, res) => {
   try {
@@ -9,7 +9,7 @@ const getUsers = async (req, res) => {
       res.status(400).json({ msg: "NO hay nada en la base de datos" });
     }
   } catch (err) {
-    res.status(500).send({msg: "Erorr en el servidor: ", err: err.message});
+    res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   }
 };
 
@@ -17,15 +17,23 @@ const perfilUser = async (req, res) => {
   try {
     const { idUser } = req.params;
 
-    const buscar = await Users.findByPk(idUser);
-    console.log(buscar);
+    const buscar = await Users.findOne({
+      include: {
+        model: Posts,
+        attributes: ["titulo", "texto", "media", "foto"],
+      },
+      where: {
+        id: idUser,
+      },
+    });
+
     if (buscar) {
-      res.status(200).send({user: buscar});
+      res.status(200).send({ user: buscar });
     } else {
       res.status(404).send({ msg: "usuario no encontrado" });
     }
   } catch (err) {
-    res.status(500).send({msg: "Erorr en el servidor: ", err: err.message});
+    res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   }
 };
 
@@ -35,15 +43,15 @@ const postUser = async (req, res) => {
     let createUser = await Users.create({
       name,
       apellido,
-      descripcion
+      descripcion,
     });
 
     res.status(200).send({
-      msg:"Usuario Creado Exitosamente", 
-      user:createUser
+      msg: "Usuario Creado Exitosamente",
+      user: createUser,
     });
   } catch (err) {
-    res.status(500).send({msg: "Erorr en el servidor: ", err: err.message});
+    res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   }
 };
 
@@ -52,14 +60,16 @@ const deleteIdUser = async (req, res) => {
     const { idDelete } = req.params;
     const buscar = await Users.findByPk(idDelete);
     if (buscar) {
-      const userDestroyed = buscar
+      const userDestroyed = buscar;
       await buscar.destroy();
-      res.status(200).send({msg: "Eliminado Correctamente", user: userDestroyed });
+      res
+        .status(200)
+        .send({ msg: "Eliminado Correctamente", user: userDestroyed });
     } else {
-      res.status(404).send({msg: "no existe ese id o ya fue eliminado"});
+      res.status(404).send({ msg: "no existe ese id o ya fue eliminado" });
     }
   } catch (err) {
-    res.status(500).send({msg: "Erorr en el servidor: ", err: err.message});
+    res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   }
 };
 
@@ -68,28 +78,27 @@ const editUser = async (req, res) => {
     const { id } = req.params;
     const { name, apellido, descripcion } = req.body;
     const findUser = await Users.findByPk(id);
-    
-    if (findUser) {
-      const fields = {}
-      if(name) fields.name = name;
-      if(apellido) fields.apellido = apellido;
-      if(descripcion) fields.descripcion = descripcion;
 
-      if (fields !== {}){
-        await findUser.update(fields)
+    if (findUser) {
+      const fields = {};
+      if (name) fields.name = name;
+      if (apellido) fields.apellido = apellido;
+      if (descripcion) fields.descripcion = descripcion;
+
+      if (fields !== {}) {
+        await findUser.update(fields);
         res.status(200).json({
-          msg:"Cambios guardados",
-          user: findUser
-        })
-      }
-      else res.status(400).send({msg: "No se ingresaron cambios"})
+          msg: "Cambios guardados",
+          user: findUser,
+        });
+      } else res.status(400).send({ msg: "No se ingresaron cambios" });
     } else {
       res.status(404).send({
-        msg: "No se ha encontrado un usuario existente con el id ingresado."
+        msg: "No se ha encontrado un usuario existente con el id ingresado.",
       });
     }
   } catch (err) {
-    res.status(500).send({msg: "Erorr en el servidor: ", err: err.message});
+    res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   }
 };
 
