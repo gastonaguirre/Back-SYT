@@ -11,7 +11,7 @@ module.exports = (sequelize) => {
 
     titulo: {
         type:DataTypes.STRING,
-        allowNull: null
+        allowNull: true
     },
 
     texto: {
