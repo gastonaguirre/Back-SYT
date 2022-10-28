@@ -2,12 +2,12 @@ const { Posts, Users } = require("../db");
 
 const getAllPost = async (req, res) => {
   try {
-    const data = await Posts.findAll({
+    const data = await Posts.findAll(/*{
       include: {
         model: Users,
         attributes: ["name","apellido"],
       },
-    });
+    }*/);
 
     if (data) {
       res.status(200).json(data);
@@ -21,20 +21,20 @@ const getAllPost = async (req, res) => {
 
 const createPost = async (req, res) => {
   try {
-    const { titulo, texto, media, userId } = req.body;
-    if (!userId) throw new Error(" missing param id");
+    const { titulo, texto, media, /*userId*/ } = req.body;
+    /*if (!userId) throw new Error(" missing param id");
     const user = await Users.findByPk(userId);
-    if (!user) throw new Error("No se encuentra el usuario");
+    if (!user) throw new Error("No se encuentra el usuario");*/
     const newPost = await Posts.create({
       titulo,
       texto,
       media,
-      userId,
+     /* userId,*/
     });
 
     if (!newPost) throw new Error("No se pudo crear el post");
 
-    user.addPosts(newPost);
+    /*user.addPosts(newPost);*/
 
     res.status(200).send({
       msg: "Post Creado Exitosamente",
