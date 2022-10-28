@@ -1,10 +1,14 @@
-const { Posts } = require("../db");
-
+const { Posts, Users } = require("../db");
 
 const getAllPost = async (req, res) => {
   try {
-    const data = await Posts.findAll();
-    console.log(data);
+    const data = await Posts.findAll({
+      include: {
+        model: Users,
+        attributes: ["name","apellido"],
+      },
+    });
+
     if (data) {
       res.status(200).json(data);
     } else {
@@ -17,26 +21,27 @@ const getAllPost = async (req, res) => {
 
 const createPost = async (req, res) => {
   try {
-    const { titulo, texto, media } = req.body;
+    const { titulo, texto, media, userId } = req.body;
+    if (!userId) throw new Error(" missing param id");
+    const user = await Users.findByPk(userId);
+    if (!user) throw new Error("No se encuentra el usuario");
+    const newPost = await Posts.create({
+      titulo,
+      texto,
+      media,
+      userId,
+    });
 
-    if (titulo && texto && media) {
-      let titulonew =
-        titulo.charAt(0).toUpperCase() + titulo.slice(1).toLowerCase();
-      const [Postexite, create] = await Posts.findOrCreate({
-        where: {
-          titulo: titulonew,
-        },
-        defaults: {
-          texto,
-          media,
-        },
-      });
-      res.status(200).json(Postexite);
-    } else {
-      res.status(400).json({ msg: "Me faltaron datos bro " });
-    }
-  } catch (error) {
-    throw new Error("algo salio mal ");
+    if (!newPost) throw new Error("No se pudo crear el post");
+
+    user.addPosts(newPost);
+
+    res.status(200).send({
+      msg: "Post Creado Exitosamente",
+      post: newPost,
+    });
+  } catch (err) {
+    res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   }
 };
 
@@ -45,7 +50,7 @@ const detailPost = async (req, res) => {
     let { id } = req.params;
     if (id) {
       let buscarid = await Posts.findByPk(id);
-      console.log(buscarid);
+
       res.status(200).json(buscarid);
     } else {
       res.status(400).json({ msg: "Falta id pa" });
@@ -100,7 +105,7 @@ const editPost = async (req, res) => {
       );
     }
   } catch (err) {
-    console.log(err)
+    console.log(err);
     res.status(400).send("hubo un error");
   }
 };
