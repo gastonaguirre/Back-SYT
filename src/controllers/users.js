@@ -16,8 +16,8 @@ const getUsers = async (req, res) => {
 const perfilUser = async (req, res) => {
   try {
     const { idUser } = req.params;
-
-    const buscar = await Users.findOne({
+    const buscar = await Users.findByPk(idUser);
+    /*const buscar = await Users.findOne({
       include: {
         model: Posts,
         attributes: ["titulo", "texto", "media", "foto"],
@@ -25,8 +25,7 @@ const perfilUser = async (req, res) => {
       where: {
         id: idUser,
       },
-    });
-
+    });*/
     if (buscar) {
       res.status(200).send({ user: buscar });
     } else {
