@@ -32,7 +32,9 @@ const perfilUser = async (req, res) => {
       if (usuario === buscar.usuario && contraseña === buscar.contraseña) {
         res.status(200).send({ user: buscar });
       } else {
-        res.status(400).json({ msg: "nombre de usuario y/o contraseña incorrectas" });
+        res
+          .status(400)
+          .json({ msg: "nombre de usuario y/o contraseña incorrectas" });
       }
     } else {
       res.status(404).send({ msg: "usuario no encontrado" });
@@ -44,11 +46,17 @@ const perfilUser = async (req, res) => {
 
 const postUser = async (req, res) => {
   try {
-    let { usuario, email, contraseña } = req.body;
+    let { usuario, email, contraseña, foto_principal, foto_portada } = req.body;
     let createUser = await Users.create({
       usuario,
       email,
       contraseña,
+      foto_principal:
+        foto_principal ||
+        "https://st3.depositphotos.com/4111759/13425/v/600/depositphotos_134255588-stock-illustration-empty-photo-of-male-profile.jpg",
+      foto_portada:
+        foto_portada ||
+        "https://pits-agroforestal.net/wp-content/themes/merlin/images/default-slider-image.png",
     });
 
     res.status(200).send({
