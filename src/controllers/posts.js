@@ -5,7 +5,7 @@ const getAllPost = async (req, res) => {
     const data = await Posts.findAll({
       include: {
         model: Users,
-        attributes: ["name","apellido"],
+        attributes: ["usuario","foto_principal"],
       },
     });
 
@@ -98,7 +98,10 @@ const editPost = async (req, res) => {
           },
         }
       );
-      res.status(200).json("Cambios guardados");
+      res.status(200).json({
+        msg: "Cambios guardados",
+        user: findUser,
+      });
     } else {
       throw new Error(
         "No se ha encontrado un post existente con el id ingresado."

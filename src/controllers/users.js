@@ -13,20 +13,51 @@ const getUsers = async (req, res) => {
   }
 };
 
+const inicioSesion = async (req, res) => {
+  try {
+    const { input, contraseña } = req.body;
+    if (input) {
+      const expReg =
+        /^[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
+
+      const objeto = {};
+      if (expReg.test(input)) {
+        objeto.email = input;
+      } else {
+        objeto.usuario = input;
+      }
+      console.log(objeto);
+      const buscarInput = await Users.findOne({ where: objeto });
+
+      if (buscarInput) {
+        if (contraseña === buscarInput.contraseña) {
+          res.status(200).send({ user: buscarInput });
+        } else {
+          res.status(400).json({ msg: "contraseña incorrectas" });
+        }
+      } else {
+        res.status(404).send({ msg: "usuario o email no encontrado" });
+      }
+    } else {
+      return res.status(404).send("necesito mas informacion");
+    }
+  } catch (err) {
+    res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
+  }
+};
+
 const perfilUser = async (req, res) => {
   try {
     const { idUser } = req.params;
-
     const buscar = await Users.findOne({
       include: {
         model: Posts,
-        attributes: ["titulo", "texto", "media", "foto"],
+        attributes: ["titulo", "texto", "media"],
       },
       where: {
         id: idUser,
       },
     });
-
     if (buscar) {
       res.status(200).send({ user: buscar });
     } else {
@@ -39,11 +70,18 @@ const perfilUser = async (req, res) => {
 
 const postUser = async (req, res) => {
   try {
-    let { name, apellido, descripcion } = req.body;
+    let { usuario, email, contraseña,foto_principal,foto_portada } = req.body;
+    const expReg =
+    /^[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
+    if(!expReg.test(email)){
+      res.status(404).send("email invalido")
+    }
     let createUser = await Users.create({
-      name,
-      apellido,
-      descripcion,
+      usuario,
+      email,
+      contraseña,
+      foto_principal:foto_principal || "https://st3.depositphotos.com/4111759/13425/v/600/depositphotos_134255588-stock-illustration-empty-photo-of-male-profile.jpg" ,
+      foto_portada:foto_portada || "https://pits-agroforestal.net/wp-content/themes/merlin/images/default-slider-image.png"
     });
 
     res.status(200).send({
@@ -76,14 +114,24 @@ const deleteIdUser = async (req, res) => {
 const editUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, apellido, descripcion } = req.body;
+    const {
+      nombre,
+      apellido,
+      foto_principal,
+      foto_portada,
+      descripcion,
+      socials_links,
+    } = req.body;
     const findUser = await Users.findByPk(id);
 
     if (findUser) {
       const fields = {};
-      if (name) fields.name = name;
+      if (nombre) fields.nombre = nombre;
       if (apellido) fields.apellido = apellido;
+      if (foto_principal) fields.foto_principal = foto_principal;
+      if (foto_portada) fields.foto_portada = foto_portada;
       if (descripcion) fields.descripcion = descripcion;
+      if (socials_links) fields.socials_links = socials_links;
 
       if (fields !== {}) {
         await findUser.update(fields);
@@ -102,4 +150,11 @@ const editUser = async (req, res) => {
   }
 };
 
-module.exports = { getUsers, deleteIdUser, postUser, perfilUser, editUser };
+module.exports = {
+  getUsers,
+  deleteIdUser,
+  postUser,
+  perfilUser,
+  editUser,
+  inicioSesion,
+};
