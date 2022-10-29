@@ -70,7 +70,7 @@ const perfilUser = async (req, res) => {
 
 const postUser = async (req, res) => {
   try {
-    let { usuario, email, contraseña } = req.body;
+    let { usuario, email, contraseña,foto_principal,foto_portada } = req.body;
     const expReg =
     /^[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
     if(!expReg.test(email)){
@@ -80,6 +80,8 @@ const postUser = async (req, res) => {
       usuario,
       email,
       contraseña,
+      foto_principal:foto_principal || "https://st3.depositphotos.com/4111759/13425/v/600/depositphotos_134255588-stock-illustration-empty-photo-of-male-profile.jpg" ,
+      foto_portada:foto_portada || "https://pits-agroforestal.net/wp-content/themes/merlin/images/default-slider-image.png"
     });
 
     res.status(200).send({
