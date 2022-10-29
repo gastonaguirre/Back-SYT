@@ -13,11 +13,42 @@ const getUsers = async (req, res) => {
   }
 };
 
+const inicioSesion = async (req, res) => {
+  try {
+    const { input, contraseña } = req.body;
+    if (input) {
+      const expReg =
+        /^[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
+
+      const objeto = {};
+      if (expReg.test(input)) {
+        objeto.email = input;
+      } else {
+        objeto.usuario = input;
+      }
+      console.log(objeto);
+      const buscarInput = await Users.findOne({ where: objeto });
+
+      if (buscarInput) {
+        if (contraseña === buscarInput.contraseña) {
+          res.status(200).send({ user: buscarInput });
+        } else {
+          res.status(400).json({ msg: "contraseña incorrectas" });
+        }
+      } else {
+        res.status(404).send({ msg: "usuario o email no encontrado" });
+      }
+    } else {
+      return res.status(404).send("necesito mas informacion");
+    }
+  } catch (err) {
+    res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
+  }
+};
+
 const perfilUser = async (req, res) => {
   try {
     const { idUser } = req.params;
-    const { usuario, contraseña } = req.body;
-
     const buscar = await Users.findOne({
       include: {
         model: Posts,
@@ -27,13 +58,8 @@ const perfilUser = async (req, res) => {
         id: idUser,
       },
     });
-
     if (buscar) {
-      if (usuario === buscar.usuario && contraseña === buscar.contraseña) {
-        res.status(200).send({ user: buscar });
-      } else {
-        res.status(400).json({ msg: "nombre de usuario y/o contraseña incorrectas" });
-      }
+      res.status(200).send({ user: buscar });
     } else {
       res.status(404).send({ msg: "usuario no encontrado" });
     }
@@ -45,6 +71,11 @@ const perfilUser = async (req, res) => {
 const postUser = async (req, res) => {
   try {
     let { usuario, email, contraseña } = req.body;
+    const expReg =
+    /^[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
+    if(!expReg.test(email)){
+      res.status(404).send("email invalido")
+    }
     let createUser = await Users.create({
       usuario,
       email,
@@ -123,4 +154,5 @@ module.exports = {
   postUser,
   perfilUser,
   editUser,
+  inicioSesion,
 };
