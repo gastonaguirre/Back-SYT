@@ -4,7 +4,7 @@ const {
   deleteIdUser,
   postUser,
   perfilUser,
-  editUser
+  editUser,
 } = require("../controllers/users");
 
 const router = Router();

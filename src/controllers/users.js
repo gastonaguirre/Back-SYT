@@ -16,6 +16,7 @@ const getUsers = async (req, res) => {
 const perfilUser = async (req, res) => {
   try {
     const { idUser } = req.params;
+    const { usuario, contraseña } = req.body;
 
     const buscar = await Users.findOne({
       include: {
@@ -28,7 +29,11 @@ const perfilUser = async (req, res) => {
     });
 
     if (buscar) {
-      res.status(200).send({ user: buscar });
+      if (usuario === buscar.usuario && contraseña === buscar.contraseña) {
+        res.status(200).send({ user: buscar });
+      } else {
+        res.status(400).json({ msg: "nombre de usuario y/o contraseña incorrectas" });
+      }
     } else {
       res.status(404).send({ msg: "usuario no encontrado" });
     }
@@ -76,7 +81,14 @@ const deleteIdUser = async (req, res) => {
 const editUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const {nombre, apellido, foto_principal,foto_portada, descripcion,socials_links } = req.body;
+    const {
+      nombre,
+      apellido,
+      foto_principal,
+      foto_portada,
+      descripcion,
+      socials_links,
+    } = req.body;
     const findUser = await Users.findByPk(id);
 
     if (findUser) {
@@ -105,4 +117,10 @@ const editUser = async (req, res) => {
   }
 };
 
-module.exports = { getUsers, deleteIdUser, postUser, perfilUser, editUser };
+module.exports = {
+  getUsers,
+  deleteIdUser,
+  postUser,
+  perfilUser,
+  editUser,
+};
