@@ -20,7 +20,7 @@ const perfilUser = async (req, res) => {
     const buscar = await Users.findOne({
       include: {
         model: Posts,
-        attributes: ["titulo", "texto", "media", "foto"],
+        attributes: ["titulo", "texto", "media"],
       },
       where: {
         id: idUser,
@@ -39,11 +39,11 @@ const perfilUser = async (req, res) => {
 
 const postUser = async (req, res) => {
   try {
-    let { name, apellido, descripcion } = req.body;
+    let { usuario, email, contraseña } = req.body;
     let createUser = await Users.create({
-      name,
-      apellido,
-      descripcion,
+      usuario,
+      email,
+      contraseña,
     });
 
     res.status(200).send({
@@ -76,14 +76,17 @@ const deleteIdUser = async (req, res) => {
 const editUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, apellido, descripcion } = req.body;
+    const {nombre, apellido, foto_principal,foto_portada, descripcion,socials_links } = req.body;
     const findUser = await Users.findByPk(id);
 
     if (findUser) {
       const fields = {};
-      if (name) fields.name = name;
+      if (nombre) fields.nombre = nombre;
       if (apellido) fields.apellido = apellido;
+      if (foto_principal) fields.foto_principal = foto_principal;
+      if (foto_portada) fields.foto_portada = foto_portada;
       if (descripcion) fields.descripcion = descripcion;
+      if (socials_links) fields.socials_links = socials_links;
 
       if (fields !== {}) {
         await findUser.update(fields);
