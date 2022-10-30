@@ -62,7 +62,7 @@ Users.hasMany(Posts);
 Posts.belongsTo(Users);
 
 Posts.belongsToMany(Categories, {through: "posts_categories"})
-Categories.belongsToMany(Posts, {through: "categories_posts"})
+Categories.belongsToMany(Posts, {through: "posts_categories"})
 
 
 
