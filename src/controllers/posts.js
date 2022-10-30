@@ -26,13 +26,14 @@ const createPost = async (req, res) => {
   try {
     
     const { titulo, texto , userId } =await req.body;
+
     const {file} =  req.files
     console.log(file)
     if (!userId) throw new Error(" missing param id");
     const user = await Users.findByPk(userId);
 
     const ar = await uploadsArchivos(file.tempFilePath)
-      /////////////////////////////////// req.body
+      ///////////////////////////////// req.body
     
      console.log("*******************************")
      console.log(ar)
