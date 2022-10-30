@@ -7,10 +7,10 @@ const getAllPost = async (req, res) => {
         model: Users,
         attributes: ["name","apellido"],
       },
-      include: {
-        model: Categories,
-        attributes: ["name"],
-      },
+//      include: {
+//        model: Categories,
+//        attributes: ["name"],
+//      },
     });
 
     if (data) {
