@@ -25,7 +25,7 @@ const getAllPost = async (req, res) => {
 
 const createPost = async (req, res) => {
   try {
-    const { titulo, texto, media, userId } = req.body;
+    const { titulo, texto, categories, media, userId } = req.body;
     if (!userId) throw new Error(" missing param id");
     const user = await Users.findByPk(userId);
     if (!user) throw new Error("No se encuentra el usuario");
@@ -35,13 +35,14 @@ const createPost = async (req, res) => {
       media,
       userId,
     });
-    // const cate = await Categories.findAll({
-    //   where: {
-    //     name: categories,
-    //   },
-    // });
-    // pokemon.addCategories(cate)
-    // newPost.dataValues.categories = cate.map(e => e.dataValues.name)
+
+    const cate = await Categories.findAll({
+      where: {
+        name: categories,
+      },
+    });
+    newPost.addCategories(cate)
+    newPost.dataValues.categories = cate.map(e => e.dataValues.name)
     if (!newPost) throw new Error("No se pudo crear el post");
 
     user.addPosts(newPost);
