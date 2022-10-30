@@ -1,5 +1,7 @@
 const { Posts, Users } = require("../db");
-
+const {uploadsArchivos} = require("../cloudinary/cloudinary")
+const fs = require("fs-extra");
+const { parse } = require("dotenv");
 const getAllPost = async (req, res) => {
   try {
     const data = await Posts.findAll({
@@ -20,22 +22,38 @@ const getAllPost = async (req, res) => {
 };
 
 const createPost = async (req, res) => {
+  console.log(req.body)
   try {
-    const { titulo, texto, media, userId } = req.body;
+    
+    const { titulo, texto , userId } =await req.body;
+    const {file} =  req.files
+    console.log(file)
     if (!userId) throw new Error(" missing param id");
     const user = await Users.findByPk(userId);
+
+    const ar = await uploadsArchivos(file.tempFilePath)
+      /////////////////////////////////// req.body
+    
+     console.log("*******************************")
+     console.log(ar)
+     console.log("*******************************")
+      let cosita =  ar.url
+      let fotos= ar.secure_url
+
     if (!user) throw new Error("No se encuentra el usuario");
     const newPost = await Posts.create({
       titulo,
       texto,
-      media,
       userId,
+      media: cosita,
+      foto: fotos
     });
 
     if (!newPost) throw new Error("No se pudo crear el post");
 
     user.addPosts(newPost);
-
+    
+     await fs.unlink(req.files.file.tempFilePath)
     res.status(200).send({
       msg: "Post Creado Exitosamente",
       post: newPost,
