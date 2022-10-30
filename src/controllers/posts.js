@@ -1,4 +1,4 @@
-const { Posts, Users } = require("../db");
+const { Posts, Users, Categories} = require("../db");
 
 const getAllPost = async (req, res) => {
   try {
@@ -7,6 +7,10 @@ const getAllPost = async (req, res) => {
         model: Users,
         attributes: ["usuario","foto_principal"],
       },
+//      include: {
+//        model: Categories,
+//        attributes: ["name"],
+//      },
     });
 
     if (data) {
@@ -31,7 +35,13 @@ const createPost = async (req, res) => {
       media,
       userId,
     });
-
+    // const cate = await Categories.findAll({
+    //   where: {
+    //     name: categories,
+    //   },
+    // });
+    // pokemon.addCategories(cate)
+    // newPost.dataValues.categories = cate.map(e => e.dataValues.name)
     if (!newPost) throw new Error("No se pudo crear el post");
 
     user.addPosts(newPost);
@@ -41,7 +51,7 @@ const createPost = async (req, res) => {
       post: newPost,
     });
   } catch (err) {
-    res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
+    res.status(500).send({ msg: "Error en el servidor: ", err: err.message });
   }
 };
 
