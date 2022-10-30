@@ -62,15 +62,28 @@ const editCategorie = async (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
     const idUpperCase = id.toUpperCase()
-    const nameUpperCase = name.toUpperCase()
     const findCategories = await Categories.findByPk(idUpperCase);
-    if(!findCategories) throw new Error("No se ha encontrado una categoria existente con el id ingresado");
-    await findCategories.update({name: nameUpperCase});
-    res.status(200).json({msg: "Cambios guardados", categorie: findCategories});
-  } catch (error) {
-    res.status(500).send({ msg: "Error en el servidor: ", error: error.message });
+    if (findCategories) {
+      const CategoriesEdited = await Categories.update(
+        {
+          name
+        },	
+        {	
+          where: {	
+            name: idUpperCase,	
+          },	
+        }	
+      );	
+      res.status(200).json("Cambios guardados");	
+    } else {	
+      throw new Error(	
+        "No se ha encontrado una categoria existente con el id ingresado."	
+      );	
+    }	
+  } catch (err) {	
+    console.log(err);	
+    res.status(400).send("hubo un error");
   }
 };
-
     
 module.exports = { createCategorie, getAllCategories, deleteCategorie, editCategorie }
