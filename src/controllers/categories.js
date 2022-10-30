@@ -34,7 +34,7 @@ const createCategorie = async (req, res) => {
 
     res.status(200).send({
         msg: "Categoria Creada Exitosamente",
-        post: categorie,
+        Categorie: categorie,
       });
   }catch(e){
     res.status(500).send({ msg: "Erorr en el servidor: ", e: e.message });
