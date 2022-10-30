@@ -1,5 +1,4 @@
-const { Posts, Users } = require("../db");
-const Categories = require("../models/Categories");
+const { Posts, Users, Categories} = require("../db");
 
 const getAllPost = async (req, res) => {
   try {
