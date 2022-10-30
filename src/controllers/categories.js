@@ -4,12 +4,12 @@ const getAllCategories = async (req, res) => {
     try {
      const allc = await Categories.findAll(
       {
-        attributes: ["name"]
+        attributes: [ "name" ]
       })
       if (!allc.length){
       const arr1 =  ["HTML","JAVASCRIPT","CSS","REACT","REDUX","NODE.JS", "EXPRESS", "SQLITE", "POSTGRESQL", "SEQUELIZE", "PRINCIPIANTE", "AVANZADO", "EXPERTO"]
       for(let i = 0; i < arr1.length; i++){
-        await Categories.create({ name: arr1[i]})
+        await Categories.create({ name: arr1[i] })
       }
       allc = await Categories.findAll({
         attributes: ["name"]
@@ -27,7 +27,7 @@ const createCategorie = async (req, res) => {
     const {name} = req.body;
     const nameM = name.toUpperCase()
     const categorie = await Categories.findOrCreate({
-        where: {name: nameM},
+        where: { name: nameM },
         defaults: {},
       });
     if(!categorie) throw new Error("No se pudo crear la categoria");
@@ -44,11 +44,14 @@ const createCategorie = async (req, res) => {
 const deleteCategorie = async (req, res) => {
   try {
     let { id } = req.params;
-    let buscarid = await Categories.findByPk(id);
-    if (buscarid) {
+    console.log(id)
+    let nameUpperCase = id.toUpperCase()
+    console.log(nameUpperCase);
+    let buscarName = await Categories.findByPk(nameUpperCase); 
+    if (buscarName) {
       await Categories.destroy({
         where: {
-          id: id,
+          name: nameUpperCase,
         },
       });
       res.status(200).json({ msg: "Se elimino la categoria" });
@@ -56,7 +59,7 @@ const deleteCategorie = async (req, res) => {
       res.status(400).json({ msg: "Id necesario para completar la accion" });
     }
   } catch (error) {
-    res.status(500).send({ msg: "Erorr en el servidor: ", e: e.message });
+    res.status(500).send({ msg: "Error en el servidor: ", error: error.message });
   }
 };
 
@@ -64,7 +67,8 @@ const editCategorie = async (req, res) => {
   try {
     const { id } = req.params;
     const { name } = req.body;
-    const findCategories = await Categories.findByPk(id);
+    const idUpperCase = id.toUpperCase()
+    const findCategories = await Categories.findByPk(idUpperCase);
 
     if (findCategories) {
       const CategoriesEdited = await Categories.update(
@@ -73,7 +77,7 @@ const editCategorie = async (req, res) => {
         },
         {
           where: {
-            id: id,
+            name: idUpperCase,
           },
         }
       );
