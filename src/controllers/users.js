@@ -1,13 +1,11 @@
-const { Users, Posts } = require("../db");
+const { Users, Posts, Categories } = require("../db");
+const { post } = require("../routes");
 
 const getUsers = async (req, res) => {
   try {
     const data = await Users.findAll();
-    if (data) {
-      res.status(200).json(data);
-    } else {
-      res.status(400).json({ msg: "NO hay nada en la base de datos" });
-    }
+    if (!data.length) throw new Error ("No hay usuarios en la base de datos")
+    res.status(200).json(data);
   } catch (err) {
     res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   }
@@ -16,31 +14,17 @@ const getUsers = async (req, res) => {
 const inicioSesion = async (req, res) => {
   try {
     const { input, contraseña } = req.body;
-    if (input) {
-      const expReg =
-        /^[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
+    if (!input) throw new Error ("No se ingreso un usuario o email")
+    if (!contraseña) throw new Error ("No se ingreso una contraseña")
+    const expReg = /^[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
+    const field = {};
+    if (expReg.test(input)) field.email = input;
+    else field.usuario = input;
 
-      const objeto = {};
-      if (expReg.test(input)) {
-        objeto.email = input;
-      } else {
-        objeto.usuario = input;
-      }
-      console.log(objeto);
-      const buscarInput = await Users.findOne({ where: objeto });
-
-      if (buscarInput) {
-        if (contraseña === buscarInput.contraseña) {
-          res.status(200).send({ user: buscarInput });
-        } else {
-          res.status(400).json({ msg: "contraseña incorrectas" });
-        }
-      } else {
-        res.status(404).send({ msg: "usuario o email no encontrado" });
-      }
-    } else {
-      return res.status(404).send("necesito mas informacion");
-    }
+    const buscarInput = await Users.findOne({ where: field });
+    if (!buscarInput) throw new Error ("usuario o email no encontrado")
+    if (contraseña !== buscarInput.contraseña) throw new Error ("contraseña incorrecta")
+    res.status(200).send({ user: buscarInput });
   } catch (err) {
     res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   }
@@ -49,20 +33,23 @@ const inicioSesion = async (req, res) => {
 const perfilUser = async (req, res) => {
   try {
     const { idUser } = req.params;
-    const buscar = await Users.findOne({
+    let buscar = await Users.findOne({
       include: {
         model: Posts,
         attributes: ["titulo", "texto", "media"],
+        include:{
+          model: Categories,
+          attributes: ["name"],
+          through: {attributes : []}
+        }
       },
       where: {
         id: idUser,
       },
     });
-    if (buscar) {
-      res.status(200).send({ user: buscar });
-    } else {
-      res.status(404).send({ msg: "usuario no encontrado" });
-    }
+    if (!buscar) throw new Error ("usuario no encontrado")
+    res.status(200).send({ user: buscar });
+   
   } catch (err) {
     res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   }
@@ -71,11 +58,9 @@ const perfilUser = async (req, res) => {
 const postUser = async (req, res) => {
   try {
     let { usuario, email, contraseña,foto_principal,foto_portada } = req.body;
-    const expReg =
-    /^[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
-    if(!expReg.test(email)){
-      res.status(404).send("email invalido")
-    }
+    const expReg = /^[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
+    if(!expReg.test(email)) throw new Error ("email invalido")
+
     let createUser = await Users.create({
       usuario,
       email,
@@ -97,15 +82,13 @@ const deleteIdUser = async (req, res) => {
   try {
     const { idDelete } = req.params;
     const buscar = await Users.findByPk(idDelete);
-    if (buscar) {
-      const userDestroyed = buscar;
-      await buscar.destroy();
-      res
-        .status(200)
-        .send({ msg: "Eliminado Correctamente", user: userDestroyed });
-    } else {
-      res.status(404).send({ msg: "no existe ese id o ya fue eliminado" });
-    }
+    if (!buscar) throw new Error ("no existe ese id o ya fue eliminado")
+    const userDestroyed = buscar;
+    await buscar.destroy();
+    res.status(200).send({
+      msg: "Eliminado Correctamente", 
+      user: userDestroyed 
+    });    
   } catch (err) {
     res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   }
@@ -122,29 +105,25 @@ const editUser = async (req, res) => {
       descripcion,
       socials_links,
     } = req.body;
+
     const findUser = await Users.findByPk(id);
+    if (!findUser) throw new Error("No se ha encontrado un usuario existente con el id ingresado");
 
-    if (findUser) {
-      const fields = {};
-      if (nombre) fields.nombre = nombre;
-      if (apellido) fields.apellido = apellido;
-      if (foto_principal) fields.foto_principal = foto_principal;
-      if (foto_portada) fields.foto_portada = foto_portada;
-      if (descripcion) fields.descripcion = descripcion;
-      if (socials_links) fields.socials_links = socials_links;
+    const fields = {};
+    if (nombre) fields.nombre = nombre;
+    if (apellido) fields.apellido = apellido;
+    if (foto_principal) fields.foto_principal = foto_principal;
+    if (foto_portada) fields.foto_portada = foto_portada;
+    if (descripcion) fields.descripcion = descripcion;
+    if (socials_links) fields.socials_links = socials_links;
 
-      if (fields !== {}) {
-        await findUser.update(fields);
-        res.status(200).json({
-          msg: "Cambios guardados",
-          user: findUser,
-        });
-      } else res.status(400).send({ msg: "No se ingresaron cambios" });
-    } else {
-      res.status(404).send({
-        msg: "No se ha encontrado un usuario existente con el id ingresado.",
-      });
-    }
+    if (fields === {}) throw new Error("No se recibieron parametros para cambiar");
+    
+    await findUser.update(fields);
+    res.status(200).json({
+      msg: "Cambios guardados",
+      user: findUser,
+    });
   } catch (err) {
     res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   }
