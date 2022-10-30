@@ -16,7 +16,7 @@ const getAllCategories = async (req, res) => {
       });                 
       return res.json(allc);
       }
-     if (allc) res.json(allc);
+     else res.json(allc);
     }catch(err) {
       res.status(500).send({ msg: "Error en el servidor: ", err: err.message });
       }
