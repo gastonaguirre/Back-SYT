@@ -43,10 +43,8 @@ const createCategorie = async (req, res) => {
 
 const deleteCategorie = async (req, res) => {
   try {
-    let { id } = req.params;
-    console.log(id)
+    let { id } = req.params; 
     let nameUpperCase = id.toUpperCase()
-    console.log(nameUpperCase);
     let buscarName = await Categories.findByPk(nameUpperCase); 
     if (buscarName) {
       await Categories.destroy({
