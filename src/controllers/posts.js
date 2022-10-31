@@ -1,4 +1,4 @@
-const { Posts, Users } = require("../db");
+const { Posts, Users  } = require("../db");
 const {uploadsArchivos, deleteArchivo} = require("../cloudinary/cloudinary")
 const fs = require("fs-extra");
 const getAllPost = async (req, res) => {
@@ -19,6 +19,7 @@ const getAllPost = async (req, res) => {
     console.log(error);
   }
 };
+
 
 const createPost = async (req, res) => {
   
