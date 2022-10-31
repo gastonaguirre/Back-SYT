@@ -1,5 +1,6 @@
 const { Posts, Users, Categories} = require("../db");
-
+const {uploadsArchivos, deleteArchivo} = require("../cloudinary/cloudinary")
+const fs = require("fs-extra");
 const getAllPost = async (req, res) => {
   try {
     let data = await Posts.findAll({
@@ -29,9 +30,15 @@ const getAllPost = async (req, res) => {
   }
 };
 
+
 const createPost = async (req, res) => {
+  
   try {
-    const { titulo, texto, categories, media, userId } = req.body;
+    
+const { titulo, texto, categories, userId } = req.body;
+
+    const {file} =  req.files
+    
     if (!userId) throw new Error(" missing param id");
     const user = await Users.findByPk(userId);
     if (!user) throw new Error("No se encuentra el usuario");
@@ -40,26 +47,31 @@ const createPost = async (req, res) => {
         name: categories,
       },
     });
-    if (!cate.length) throw new Error ("No se encontraron las categorias")
     
-    const newPost = await Posts.create({
-      titulo,
-      texto,
-      media,
-      userId,
-      categories
-    });
+    const fields = {}
+    if(titulo)  fields.titulo = titulo;
+    if(texto)  fields.texto = texto;
+    if(categories.length)  fields.categories = categories;
+    if(file){
+      const ar = await uploadsArchivos(file.tempFilePath)
+        let cosita =  ar.url
+      fields.media = cosita;
+      await fs.unlink(req.files.file.tempFilePath)
+    }
+    fields.userId = userId
+      const newPost = await Posts.create(fields);
+      if (!newPost) throw new Error("No se pudo crear el post");
+  
+      user.addPosts(newPost);
+      newPost.addCategories(cate)
+      
+      res.status(200).send({
+        msg: "Post Creado Exitosamente",
+        post: newPost,
+      });
+      
 
-    if (!newPost) throw new Error("No se pudo crear el post");
 
-    user.addPosts(newPost);
-    newPost.addCategories(cate)
-    //newPost.dataValues.categories = cate.map(e => e.dataValues.name)
-
-    res.status(200).send({
-      msg: "Post Creado Exitosamente",
-      post: newPost,
-    });
   } catch (err) {
     res.status(500).send({ msg: "Error en el servidor: ", err: err.message });
   }
@@ -80,9 +92,10 @@ const eliminarPost = async (req, res) => {
   try {
     let { id } = req.params;
     let buscarid = await Posts.findByPk(id);
-    if(!buscarid) throw new Error ("No se encontro la publicacion o ya esta eliminada")
+    if(!buscarid) throw new Error ("No se encontro la publicacion o ya esta eliminada")    
+    if (buscarid.media.length > 15) await deleteArchivo(buscarid.media)
     await buscarid.destroy();
-    res.status(200).json({ msg: "Se elimino el posteo" });
+    res.status(200).json({ msg: "Se elimino el posteo" }); 
   } catch (err) {
     res.status(500).send({ msg: "Error en el servidor: ", err: err.message });
   }
