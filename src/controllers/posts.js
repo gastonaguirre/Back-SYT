@@ -4,6 +4,7 @@ const fs = require("fs-extra");
 const getAllPost = async (req, res) => {
   try {
     let data = await Posts.findAll({
+      order:[["createdAt","DESC"]],
       include:[
         {
           model: Users,
@@ -37,7 +38,7 @@ const createPost = async (req, res) => {
     
 const { titulo, texto, categories, userId } = req.body;
 
-    const {file} =  req.files
+    
     
     if (!userId) throw new Error(" missing param id");
     const user = await Users.findByPk(userId);
@@ -52,8 +53,8 @@ const { titulo, texto, categories, userId } = req.body;
     if(titulo)  fields.titulo = titulo;
     if(texto)  fields.texto = texto;
     if(categories.length)  fields.categories = categories;
-    if(file){
-      const ar = await uploadsArchivos(file.tempFilePath)
+    if(req.files){
+      const ar = await uploadsArchivos(req.files.file.tempFilePath)
         let cosita =  ar.url
       fields.media = cosita;
       await fs.unlink(req.files.file.tempFilePath)
@@ -61,7 +62,7 @@ const { titulo, texto, categories, userId } = req.body;
     fields.userId = userId
       const newPost = await Posts.create(fields);
       if (!newPost) throw new Error("No se pudo crear el post");
-  
+    
       user.addPosts(newPost);
       newPost.addCategories(cate)
       
