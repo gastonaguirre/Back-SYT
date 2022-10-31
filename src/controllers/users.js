@@ -1,13 +1,30 @@
-const { Users, Posts } = require("../db");
+const { Users, Posts, Categories } = require("../db");
+const { post } = require("../routes");
 
 const getUsers = async (req, res) => {
   try {
     const data = await Users.findAll();
-    if (data) {
-      res.status(200).json(data);
-    } else {
-      res.status(400).json({ msg: "NO hay nada en la base de datos" });
-    }
+    if (!data.length) throw new Error ("No hay usuarios en la base de datos")
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
+  }
+};
+
+const inicioSesion = async (req, res) => {
+  try {
+    const { input, contraseña } = req.body;
+    if (!input) throw new Error ("No se ingreso un usuario o email")
+    if (!contraseña) throw new Error ("No se ingreso una contraseña")
+    const expReg = /^[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
+    const field = {};
+    if (expReg.test(input)) field.email = input;
+    else field.usuario = input;
+
+    const buscarInput = await Users.findOne({ where: field });
+    if (!buscarInput) throw new Error ("usuario o email no encontrado")
+    if (contraseña !== buscarInput.contraseña) throw new Error ("contraseña incorrecta")
+    res.status(200).send({ user: buscarInput });
   } catch (err) {
     res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   }
@@ -16,22 +33,23 @@ const getUsers = async (req, res) => {
 const perfilUser = async (req, res) => {
   try {
     const { idUser } = req.params;
-
-    const buscar = await Users.findOne({
+    let buscar = await Users.findOne({
       include: {
         model: Posts,
-        attributes: ["titulo", "texto", "media", "foto"],
+        attributes: ["titulo", "texto", "media"],
+        include:{
+          model: Categories,
+          attributes: ["name"],
+          through: {attributes : []}
+        }
       },
       where: {
         id: idUser,
       },
     });
-
-    if (buscar) {
-      res.status(200).send({ user: buscar });
-    } else {
-      res.status(404).send({ msg: "usuario no encontrado" });
-    }
+    if (!buscar) throw new Error ("usuario no encontrado")
+    res.status(200).send({ user: buscar });
+   
   } catch (err) {
     res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   }
@@ -39,11 +57,16 @@ const perfilUser = async (req, res) => {
 
 const postUser = async (req, res) => {
   try {
-    let { name, apellido, descripcion } = req.body;
+    let { usuario, email, contraseña,foto_principal,foto_portada } = req.body;
+    const expReg = /^[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
+    if(!expReg.test(email)) throw new Error ("email invalido")
+
     let createUser = await Users.create({
-      name,
-      apellido,
-      descripcion,
+      usuario,
+      email,
+      contraseña,
+      foto_principal:foto_principal || "https://st3.depositphotos.com/4111759/13425/v/600/depositphotos_134255588-stock-illustration-empty-photo-of-male-profile.jpg" ,
+      foto_portada:foto_portada || "https://pits-agroforestal.net/wp-content/themes/merlin/images/default-slider-image.png"
     });
 
     res.status(200).send({
@@ -59,15 +82,13 @@ const deleteIdUser = async (req, res) => {
   try {
     const { idDelete } = req.params;
     const buscar = await Users.findByPk(idDelete);
-    if (buscar) {
-      const userDestroyed = buscar;
-      await buscar.destroy();
-      res
-        .status(200)
-        .send({ msg: "Eliminado Correctamente", user: userDestroyed });
-    } else {
-      res.status(404).send({ msg: "no existe ese id o ya fue eliminado" });
-    }
+    if (!buscar) throw new Error ("no existe ese id o ya fue eliminado")
+    const userDestroyed = buscar;
+    await buscar.destroy();
+    res.status(200).send({
+      msg: "Eliminado Correctamente", 
+      user: userDestroyed 
+    });    
   } catch (err) {
     res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   }
@@ -76,30 +97,43 @@ const deleteIdUser = async (req, res) => {
 const editUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, apellido, descripcion } = req.body;
+    const {
+      nombre,
+      apellido,
+      foto_principal,
+      foto_portada,
+      descripcion,
+      socials_links,
+    } = req.body;
+
     const findUser = await Users.findByPk(id);
+    if (!findUser) throw new Error("No se ha encontrado un usuario existente con el id ingresado");
 
-    if (findUser) {
-      const fields = {};
-      if (name) fields.name = name;
-      if (apellido) fields.apellido = apellido;
-      if (descripcion) fields.descripcion = descripcion;
+    const fields = {};
+    if (nombre) fields.nombre = nombre;
+    if (apellido) fields.apellido = apellido;
+    if (foto_principal) fields.foto_principal = foto_principal;
+    if (foto_portada) fields.foto_portada = foto_portada;
+    if (descripcion) fields.descripcion = descripcion;
+    if (socials_links) fields.socials_links = socials_links;
 
-      if (fields !== {}) {
-        await findUser.update(fields);
-        res.status(200).json({
-          msg: "Cambios guardados",
-          user: findUser,
-        });
-      } else res.status(400).send({ msg: "No se ingresaron cambios" });
-    } else {
-      res.status(404).send({
-        msg: "No se ha encontrado un usuario existente con el id ingresado.",
-      });
-    }
+    if (fields === {}) throw new Error("No se recibieron parametros para cambiar");
+    
+    await findUser.update(fields);
+    res.status(200).json({
+      msg: "Cambios guardados",
+      user: findUser,
+    });
   } catch (err) {
     res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   }
 };
 
-module.exports = { getUsers, deleteIdUser, postUser, perfilUser, editUser };
+module.exports = {
+  getUsers,
+  deleteIdUser,
+  postUser,
+  perfilUser,
+  editUser,
+  inicioSesion,
+};
