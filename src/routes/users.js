@@ -7,10 +7,11 @@ const {
   editUser,
   inicioSesion
 } = require("../controllers/users");
+const { requiresAuth } = require('express-openid-connect');
 
 const router = Router();
 
-router.get("/", getUsers);
+router.get("/",requiresAuth(), getUsers);
 router.get("/login",inicioSesion);
 router.get("/:idUser", perfilUser);
 router.delete("/:idDelete", deleteIdUser);

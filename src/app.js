@@ -4,12 +4,30 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const routes = require('./routes/index.js');
 const cors = require("cors");
-
+const { auth } = require('express-openid-connect');
+const { requiresAuth } = require('express-openid-connect');
 
 require('./db.js');
+const config = {
+  authRequired: false,
+  auth0Logout: true,
+  secret: 'a long, randomly-generated string stored in env',
+  baseURL: 'http://localhost:3001',
+  clientID: 'dbEo6p0zxZG7X0glf6JVdrg6lCRpLtYe',
+  issuerBaseURL: 'https://dev-3os76g7vk3pv8aji.us.auth0.com'
+};
 
 const server = express();
+// auth router attaches /login, /logout, and /callback routes to the baseURL
+server.use(auth(config));
 
+// req.isAuthenticated is provided from the auth router
+
+// server.get('/profile', requiresAuth(), (req, res) => {
+//   const cositas = console.log(req.oidc.user)
+//   cositas
+//   res.send(JSON.stringify(req.oidc.user));
+// });
 server.name = 'API';
 server.use(express.json())
 server.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
@@ -25,6 +43,15 @@ server.use((req, res, next) => {
   next();
 });
 
+// server.get('/', (req, res) => {
+//   res.send(`<a href="/admin">Admin Section</a>`);
+// });
+// server.get('/admin',requiresAuth(), (req, res) =>
+//   res.send(`Hello $, this is the admin section.`)
+// );
+// server.get("/logout",(req,res)=>{
+
+// })
 
 server.use('/', routes);
 
