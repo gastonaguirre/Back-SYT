@@ -1,4 +1,5 @@
 const { Router } = require('express');
+const {Admin} = require("../db")
 // Importar todos los routers;
 // Ejemplo: const authRouter = require('./auth.js');
 const Users = require('./users')
@@ -13,6 +14,21 @@ const router = Router();
 router.use('/users', Users)
 router.use('/posts', Posts)
 router.use('/categories', Categories)
+
+router.post("/admin", async(req, res) => {
+    let {usuario, email, contraseña} = req.body;
+  try{
+    let nuevoAdmin = await Admin.create({usuario, email, contraseña})
+    res.status(200).send("se creo el admin")
+   } catch (err) {
+     console.log(err);
+     res.status(404).send("admin no creado")
+    }
+  });
+
+
+
+
 
 
 module.exports = router;
