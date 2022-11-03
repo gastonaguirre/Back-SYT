@@ -27,18 +27,8 @@ router.post("/admin", async(req, res) => {
     }
   });
 
-  
-  //!====================================================================================
-//!RUTA BORRADO LOGICO
-router.get("/banerUser", async (_req, res) =>{
-try{
-  const usersInactive = await getUsersInactive()
-  console.log(usersInactive)
-  res.status(200).json(usersInactive);
-}catch(error){
-  res.status(400).json({ message: error.message });
-}
-})
+
+
 
 
 

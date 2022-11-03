@@ -148,6 +148,20 @@ async function getUsersInactive(){
 }
 
 
+async function restoreUser(id){
+  const restoreU = await Users.restore({
+      where:{
+          id: {
+              [Op.eq]: id
+          }
+      }
+  })
+
+  return "Usuario restaurado correctamente"
+}
+
+
+
 module.exports = {
   getUsers,
   deleteIdUser,
@@ -156,4 +170,5 @@ module.exports = {
   editUser,
   inicioSesion,
   getUsersInactive,
+  restoreUser,
 };
