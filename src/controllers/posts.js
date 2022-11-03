@@ -55,8 +55,11 @@ const { titulo, texto, categories, userId } = req.body;
     if(categories.length)  fields.categories = categories;
     if(req.files){
       const ar = await uploadsArchivos(req.files.file.tempFilePath)
-        let cosita =  ar.url
-      fields.media = cosita;
+
+        let paraeliminar =  ar.public_id;
+        let url = ar.url;
+      fields.url = paraeliminar
+      fields.media = url;
       await fs.unlink(req.files.file.tempFilePath)
     }
     fields.userId = userId
@@ -71,8 +74,6 @@ const { titulo, texto, categories, userId } = req.body;
         post: newPost,
       });
       
-
-
   } catch (err) {
     res.status(500).send({ msg: "Error en el servidor: ", err: err.message });
   }
@@ -93,8 +94,9 @@ const eliminarPost = async (req, res) => {
   try {
     let { id } = req.params;
     let buscarid = await Posts.findByPk(id);
-    if(!buscarid) throw new Error ("No se encontro la publicacion o ya esta eliminada")    
-    if (buscarid.media.length > 15) await deleteArchivo(buscarid.media)
+    if(!buscarid){ res.status(500).json({msg:"No se encontro ese posts"})}
+    if(buscarid.media){await deleteArchivo(buscarid.url)}
+    
     await buscarid.destroy();
     res.status(200).json({ msg: "Se elimino el posteo" }); 
   } catch (err) {

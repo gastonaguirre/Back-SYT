@@ -13,7 +13,9 @@ async function uploadsArchivos(filePath){
     })
 }
 async function deleteArchivo (publicidID){
+    console.log(publicidID)
     await cloudinary.uploader.destroy(publicidID)
+    
 }
 
 module.exports= {uploadsArchivos, deleteArchivo}

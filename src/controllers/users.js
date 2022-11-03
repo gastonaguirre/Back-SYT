@@ -82,7 +82,7 @@ const postUser = async (req, res) => {
       foto_portada:foto_portada || "https://pits-agroforestal.net/wp-content/themes/merlin/images/default-slider-image.png",
       },  
     })
-    if(!created)  return res.status(200).send({ msg: "So vo amigo" })
+    if(!created)  return res.status(200).send({ msg: "So vo amigo" ,user: user })
     res.status(200).send({
       msg: "Usuario Creado Exitosamente",
       user: user,
