@@ -4,22 +4,22 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const routes = require('./routes/index.js');
 const cors = require("cors");
-const { auth } = require('express-openid-connect');
-const { requiresAuth } = require('express-openid-connect');
+// const { auth } = require('express-openid-connect');
+// const { requiresAuth } = require('express-openid-connect');
 
 require('./db.js');
-const config = {
-  authRequired: false,
-  auth0Logout: true,
-  secret: 'a long, randomly-generated string stored in env',
-  baseURL: 'http://localhost:3001',
-  clientID: 'dbEo6p0zxZG7X0glf6JVdrg6lCRpLtYe',
-  issuerBaseURL: 'https://dev-3os76g7vk3pv8aji.us.auth0.com'
-};
+// const config = {
+//   authRequired: false,
+//   auth0Logout: true,
+//   secret: 'a long, randomly-generated string stored in env',
+//   baseURL: 'http://localhost:3001',
+//   clientID: 'dbEo6p0zxZG7X0glf6JVdrg6lCRpLtYe',
+//   issuerBaseURL: 'https://dev-3os76g7vk3pv8aji.us.auth0.com'
+// };
 
 const server = express();
 // auth router attaches /login, /logout, and /callback routes to the baseURL
-server.use(auth(config));
+// server.use(auth(config));
 
 // req.isAuthenticated is provided from the auth router
 

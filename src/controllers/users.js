@@ -3,9 +3,9 @@ const { post } = require("../routes");
 
 const getUsers = async (req, res) => {
   try {
-    // const data = await Users.findAll();
-    // if (!data.length) throw new Error ("No hay usuarios en la base de datos")
-    res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
+    const data = await Users.findAll();
+    if (!data.length) throw new Error ("No hay usuarios en la base de datos")
+    // res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
    
     res.status(200).json(data);
   } catch (err) {
@@ -15,28 +15,28 @@ const getUsers = async (req, res) => {
 
 const inicioSesion = async (req, res) => {
   try {
-    // const { input, contraseña } = req.body;
-    // if (!input) throw new Error ("No se ingreso un usuario o email")
-    // if (!contraseña) throw new Error ("No se ingreso una contraseña")
-    // const expReg = /^[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
-    // const field = {};
-    // if (expReg.test(input)) field.email = input;
-    // else field.usuario = input;
+    const { input, contraseña } = req.body;
+    if (!input) throw new Error ("No se ingreso un usuario o email")
+    if (!contraseña) throw new Error ("No se ingreso una contraseña")
+    const expReg = /^[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
+    const field = {};
+    if (expReg.test(input)) field.email = input;
+    else field.usuario = input;
 
-    // const buscarInput = await Users.findOne({ where: field });
-    // if (!buscarInput) throw new Error ("usuario o email no encontrado")
-    // if (contraseña !== buscarInput.contraseña) throw new Error ("contraseña incorrecta")
-    // res.status(200).send({ user: buscarInput });
-    const cositas = req.oidc.user
-    console.log(cositas)
-    const name = cositas.nickname;
+    const buscarInput = await Users.findOne({ where: field });
+    if (!buscarInput) throw new Error ("usuario o email no encontrado")
+    if (contraseña !== buscarInput.contraseña) throw new Error ("contraseña incorrecta")
+    res.status(200).send({ user: buscarInput });
+    // const cositas = req.oidc.user
+    // console.log(cositas)
+    // const name = cositas.nickname;
 
-    let createUser = await Users.create({
-        usuario : cositas.nickname,
-        email: cositas.email,
-        foto_principal:cositas.picture || "https://st3.depositphotos.com/4111759/13425/v/600/depositphotos_134255588-stock-illustration-empty-photo-of-male-profile.jpg" ,
-        foto_portada: cositas.picture ||"https://pits-agroforestal.net/wp-content/themes/merlin/images/default-slider-image.png"
-      });
+    // let createUser = await Users.create({
+    //     usuario : cositas.nickname,
+    //     email: cositas.email,
+    //     foto_principal:cositas.picture || "https://st3.depositphotos.com/4111759/13425/v/600/depositphotos_134255588-stock-illustration-empty-photo-of-male-profile.jpg" ,
+    //     foto_portada: cositas.picture ||"https://pits-agroforestal.net/wp-content/themes/merlin/images/default-slider-image.png"
+    //   });
     
     res.status(200).json(createUser)
   } catch (err) {
@@ -71,25 +71,38 @@ const perfilUser = async (req, res) => {
 
 const postUser = async (req, res) => {
   try {
-    // let { usuario, email, contraseña,foto_principal,foto_portada } = req.body;
-    // const expReg = /^[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
-    // if(!expReg.test(email)) throw new Error ("email invalido")
+    let { usuario, email, foto_principal, foto_portada } = req.body;    
+    const [user, created] = await Users.findOrCreate({
+      where:{ 
+        email,
+      },
+      defaults:{
+      usuario,
+      foto_principal:foto_principal || "https://st3.depositphotos.com/4111759/13425/v/600/depositphotos_134255588-stock-illustration-empty-photo-of-male-profile.jpg",
+      foto_portada:foto_portada || "https://pits-agroforestal.net/wp-content/themes/merlin/images/default-slider-image.png",
+      },  
+    })
+    if(!created)  return res.status(200).send({ msg: "So vo amigo" })
+    res.status(200).send({
+      msg: "Usuario Creado Exitosamente",
+      user: user,
+    })
 
+    // const buscarEmail = await Users.findOne({
+    //   where:{
+    //     email: expReg
+    //   }
+    // })
+    // if(buscarEmail){
+    //   res.status(200).send("User ya existente")
+    
+    // }
     // let createUser = await Users.create({
     //   usuario,
     //   email,
-    //   contraseña,
     //   foto_principal:foto_principal || "https://st3.depositphotos.com/4111759/13425/v/600/depositphotos_134255588-stock-illustration-empty-photo-of-male-profile.jpg" ,
     //   foto_portada:foto_portada || "https://pits-agroforestal.net/wp-content/themes/merlin/images/default-slider-image.png"
     // });
-
-    // res.status(200).send({
-    //   msg: "Usuario Creado Exitosamente",
-    //   user: createUser,
-    // });
-    
-    
-    
   } catch (err) {
     res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   }
