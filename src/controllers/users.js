@@ -133,6 +133,21 @@ const editUser = async (req, res) => {
   }
 };
 
+
+async function getUsersInactive(){
+  const usersInactive = User.findAll({
+      where:{
+        deletedAt:{
+          [Op.ne]:null
+        },
+    },
+    paranoid: false
+  })
+  //console.log("controller", usersInactive)
+  return usersInactive
+}
+
+
 module.exports = {
   getUsers,
   deleteIdUser,
@@ -140,4 +155,5 @@ module.exports = {
   perfilUser,
   editUser,
   inicioSesion,
+  getUsersInactive,
 };
