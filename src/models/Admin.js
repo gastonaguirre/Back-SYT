@@ -1,14 +1,8 @@
 const { DataTypes, UUIDV4 } = require("sequelize");
 module.exports = (sequelize) => {
   sequelize.define(
-    "users",
+    "admin",
     {
-      // id:{
-      //   type:DataTypes.INTEGER,
-      //   autoIncrement:true,
-      //   allowNull: false,
-      //   primaryKey: true
-      // },
       usuario: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -23,10 +17,7 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      nombre: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
+  
       apellido: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -48,11 +39,9 @@ module.exports = (sequelize) => {
         allowNull: true,
       },
     },
-
     {
       paranoid: true,
       timestamps: false
     }
   );
 };
-
