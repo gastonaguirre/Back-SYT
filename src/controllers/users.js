@@ -135,7 +135,7 @@ const editUser = async (req, res) => {
 
 
 async function getUsersInactive(){
-  const usersInactive = User.findAll({
+  const usersInactive = Users.findAll({
       where:{
         deletedAt:{
           [Op.ne]:null
