@@ -27,7 +27,7 @@ const inicioSesion = async (req, res) => {
     res.status(200).send({ user: buscarInput });
     
     
-    res.status(200).json(createUser)
+    
   } catch (err) {
     res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   }
