@@ -11,24 +11,6 @@ const getUsers = async (req, res) => {
   }
 };
 
-const inicioSesion = async (req, res) => {
-  try {
-    const { input, contraseña } = req.body;
-    if (!input) throw new Error ("No se ingreso un usuario o email")
-    if (!contraseña) throw new Error ("No se ingreso una contraseña")
-    const expReg = /^[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
-    const field = {};
-    if (expReg.test(input)) field.email = input;
-    else field.usuario = input;
-
-    const buscarInput = await Users.findOne({ where: field });
-    if (!buscarInput) throw new Error ("usuario o email no encontrado")
-    if (contraseña !== buscarInput.contraseña) throw new Error ("contraseña incorrecta")
-    res.status(200).send({ user: buscarInput });
-  } catch (err) {
-    res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
-  }
-};
 
 const perfilUser = async (req, res) => {
   try {
@@ -55,24 +37,24 @@ const perfilUser = async (req, res) => {
   }
 };
 
-const postUser = async (req, res) => {
+const findOrCreate = async (req, res) => {
   try {
-    let { usuario, email, contraseña,foto_principal,foto_portada } = req.body;
-    const expReg = /^[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
-    if(!expReg.test(email)) throw new Error ("email invalido")
-
-    let createUser = await Users.create({
+    let { usuario, email, foto_principal, foto_portada } = req.body;    
+    const [user, created] = await Users.findOrCreate({
+      where:{ 
+        email,
+      },
+      defaults:{
       usuario,
-      email,
-      contraseña,
-      foto_principal:foto_principal || "https://st3.depositphotos.com/4111759/13425/v/600/depositphotos_134255588-stock-illustration-empty-photo-of-male-profile.jpg" ,
-      foto_portada:foto_portada || "https://pits-agroforestal.net/wp-content/themes/merlin/images/default-slider-image.png"
-    });
-
+      foto_principal:foto_principal || "https://st3.depositphotos.com/4111759/13425/v/600/depositphotos_134255588-stock-illustration-empty-photo-of-male-profile.jpg",
+      foto_portada:foto_portada || "https://pits-agroforestal.net/wp-content/themes/merlin/images/default-slider-image.png",
+      },  
+    })
+    if(!created)  return res.status(200).send({ msg: "So vo amigo" ,user: user })
     res.status(200).send({
       msg: "Usuario Creado Exitosamente",
-      user: createUser,
-    });
+      user: user,
+    })
   } catch (err) {
     res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   }
@@ -117,7 +99,7 @@ const editUser = async (req, res) => {
     if (descripcion) fields.descripcion = descripcion;
     if (socials_links) fields.socials_links = socials_links;
 
-    if (fields === {}) throw new Error("No se recibieron parametros para cambiar");
+    if (fields === {}) throw new Error({msg:"No se recibieron parametros para cambiar cosas"});
     
     await findUser.update(fields);
     res.status(200).json({
@@ -132,8 +114,7 @@ const editUser = async (req, res) => {
 module.exports = {
   getUsers,
   deleteIdUser,
-  postUser,
+  findOrCreate,
   perfilUser,
   editUser,
-  inicioSesion,
 };
