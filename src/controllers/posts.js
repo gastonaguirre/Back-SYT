@@ -27,13 +27,8 @@ const getAllPost = async (req, res) => {
 
 
 const createPost = async (req, res) => {
-  
   try {
-    
-const { titulo, texto, categories, userId } = req.body;
-
-    
-    
+    const { titulo, texto, categories, userId } = req.body;
     if (!userId) throw new Error(" missing param id");
     const user = await Users.findByPk(userId);
     if (!user) throw new Error("No se encuentra el usuario");
@@ -49,7 +44,6 @@ const { titulo, texto, categories, userId } = req.body;
     if(categories.length)  fields.categories = categories;
     if(req.files){
       const ar = await uploadsArchivos(req.files.file.tempFilePath)
-
         let paraeliminar =  ar.public_id;
         let url = ar.url;
       fields.url = paraeliminar
@@ -67,7 +61,6 @@ const { titulo, texto, categories, userId } = req.body;
         msg: "Post Creado Exitosamente",
         post: newPost,
       });
-      
   } catch (err) {
     res.status(500).send({ msg: "Error en el servidor: ", err: err.message });
   }
