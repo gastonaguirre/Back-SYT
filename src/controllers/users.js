@@ -37,7 +37,7 @@ const perfilUser = async (req, res) => {
   }
 };
 
-const postUser = async (req, res) => {
+const findOrCreate = async (req, res) => {
   try {
     let { usuario, email, foto_principal, foto_portada } = req.body;    
     const [user, created] = await Users.findOrCreate({
@@ -114,7 +114,7 @@ const editUser = async (req, res) => {
 module.exports = {
   getUsers,
   deleteIdUser,
-  postUser,
+  findOrCreate,
   perfilUser,
   editUser,
 };
