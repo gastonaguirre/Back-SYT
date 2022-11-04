@@ -5,8 +5,6 @@ const getUsers = async (req, res) => {
   try {
     const data = await Users.findAll();
     if (!data.length) throw new Error ("No hay usuarios en la base de datos")
-    // res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
-   
     res.status(200).json(data);
   } catch (err) {
     res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
