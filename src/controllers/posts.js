@@ -18,12 +18,6 @@ const getAllPost = async (req, res) => {
       ]
     });
     if (!data.length) throw new Error ("No hay posts en la base de datos")
-    
-    // data= data.map(post=>{
-    //   post = post.dataValues;
-    //   post.categories = post.categories.map (e=>e.dataValues.name)
-    //   return post
-    // })
 
     res.status(200).json(data);   
   } catch (err) {
