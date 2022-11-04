@@ -7,7 +7,6 @@ const {
   editUser,
   inicioSesion
 } = require("../controllers/users");
-// const { requiresAuth } = require('express-openid-connect');
 
 const router = Router();
 
