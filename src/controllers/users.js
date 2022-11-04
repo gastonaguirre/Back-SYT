@@ -99,7 +99,7 @@ const editUser = async (req, res) => {
     if (descripcion) fields.descripcion = descripcion;
     if (socials_links) fields.socials_links = socials_links;
 
-    if (fields === {}) throw new Error({msg:"No se recibieron parametros para cambiar"});
+    if (fields === {}) throw new Error({msg:"No se recibieron parametros para cambiar cosas"});
     
     await findUser.update(fields);
     res.status(200).json({
