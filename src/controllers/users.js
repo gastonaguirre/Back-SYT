@@ -118,5 +118,5 @@ module.exports = {
   postUser,
   perfilUser,
   editUser,
-  inicioSesion,
+  
 };
