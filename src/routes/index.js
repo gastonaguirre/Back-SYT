@@ -17,10 +17,10 @@ router.use('/posts', Posts)
 router.use('/categories', Categories)
 
 router.post("/admin", async(req, res) => {
-    let {usuario, email, contraseña} = req.body;
+    let {usuario, email} = req.body;
   try{
-    let nuevoAdmin = await Admin.create({usuario, email, contraseña})
-    res.status(200).send("se creo el admin", nuevoAdmin)
+    let nuevoAdmin = await Admin.create({usuario, email})
+    res.status(200).send({msg:"se creo el adming", admin: nuevoAdmin})
    } catch (err) {
      console.log(err);
      res.status(404).send("admin no creado")
