@@ -7,7 +7,7 @@ const getAllCategories = async (req, res) => {
       const arr1 =  [
         "HTML", "JAVASCRIPT", "CSS", "REACT", "REDUX",
         "NODE.JS", "EXPRESS", "SQLITE", "POSTGRESQL", 
-        "SEQUELIZE", "PRINCIPIANTE", "AVANZADO", "EXPERTO"
+        "SEQUELIZE", "PYTHON", "JAVA"
       ]
       for(let i = 0; i < arr1.length; i++){
         await Categories.create({ name: arr1[i] })
