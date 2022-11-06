@@ -6,7 +6,6 @@ const getUsers = async (req, res) => {
     const data = await Users.findAll();
     if (!data.length) throw new Error ("No hay usuarios en la base de datos")
 
-   
     res.status(200).json(data);
   } catch (err) {
     res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
@@ -34,6 +33,7 @@ const inicioSesion = async (req, res) => {
   }
 };
 
+
 const perfilUser = async (req, res) => {
   try {
     const { idUser } = req.params;
@@ -59,7 +59,7 @@ const perfilUser = async (req, res) => {
   }
 };
 
-const postUser = async (req, res) => {
+const findOrCreate = async (req, res) => {
   try {
     let { usuario, email, foto_principal, foto_portada } = req.body;    
     const [user, created] = await Users.findOrCreate({
@@ -121,7 +121,7 @@ const editUser = async (req, res) => {
     if (descripcion) fields.descripcion = descripcion;
     if (socials_links) fields.socials_links = socials_links;
 
-    if (fields === {}) throw new Error("No se recibieron parametros para cambiar");
+    if (fields === {}) throw new Error({msg:"No se recibieron parametros para cambiar cosas"});
     
     await findUser.update(fields);
     res.status(200).json({
@@ -136,8 +136,7 @@ const editUser = async (req, res) => {
 module.exports = {
   getUsers,
   deleteIdUser,
-  postUser,
+  findOrCreate,
   perfilUser,
   editUser,
-  inicioSesion,
 };
