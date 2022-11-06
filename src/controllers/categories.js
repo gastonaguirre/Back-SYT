@@ -5,9 +5,9 @@ const getAllCategories = async (req, res) => {
     let allc = await Categories.findAll({attributes: [ "name" ]})
     if (!allc.length){
       const arr1 =  [
-        "HTML", "JAVASCRIPT", "CSS", "REACT", "REDUX",
-        "NODE.JS", "EXPRESS", "SQLITE", "POSTGRESQL", 
-        "SEQUELIZE", "PYTHON", "JAVA"
+        "html", "javascript", "css", "react", "redux",
+        "node.js", "express", "sqlite", "postgresql", 
+        "sequelize", "python", "java"
       ]
       for(let i = 0; i < arr1.length; i++){
         await Categories.create({ name: arr1[i] })
