@@ -1,6 +1,5 @@
 const { Users, Posts, Categories } = require("../db");
 const { post } = require("../routes");
-const {deleteUser} = require("../controllers/userFunction.js")
 
 const getUsers = async (req, res) => {
   try {
@@ -99,38 +98,6 @@ const deleteIdUser = async (req, res) => {
   }
 };
 
-const deleteLogico =async (req, res)=>{
-  try{
-    const {id} =req.params;
-    const {paranoid}= req.body
-    const response = await deleteUser(id,true);
-    res.status(200).json(response);
-
-  }catch(error){
-    res.status(400).json({msg:error.msg})
-  }
-
-
-
-
-
-  // let data =await Users.destroy({
-  //   where:{
-  //     id:2
-  //   }
-  // })
-  // res.status(200).json(data);
-}
-
-// const restoredata= async (req, res)=>{
-//   let data = await Users.restore({
-//     where:{
-//       id:1
-//     }
-//   })
-//   res.status(200).json(data);
-// }
-
 const editUser = async (req, res) => {
   try {
     const { id } = req.params;
@@ -171,8 +138,5 @@ module.exports = {
   deleteIdUser,
   findOrCreate,
   perfilUser,
-  editUser,
-  inicioSesion,
-  deleteLogico,
-  // restoredata,
+  editUser
 };
