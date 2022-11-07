@@ -138,5 +138,5 @@ module.exports = {
   deleteIdUser,
   findOrCreate,
   perfilUser,
-  editUser,
+  editUser
 };
