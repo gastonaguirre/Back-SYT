@@ -30,12 +30,9 @@ const createPost = async (req, res) => {
   try {
     const { titulo, texto, categories, userId } = req.body;
     const arrayCate=JSON.parse(categories)
-    console.log(arrayCate)
-
     if (!userId) throw new Error(" missing param id");
     const user = await Users.findByPk(userId, {attributes: ["usuario", "foto_principal"]});
     if (!user) throw new Error("No se encuentra el usuario");
-   
   
     const cate = await Categories.findAll({
       where: {
