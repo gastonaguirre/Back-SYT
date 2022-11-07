@@ -33,7 +33,7 @@ const createPost = async (req, res) => {
     console.log(arrayCate)
 
     if (!userId) throw new Error(" missing param id");
-    const user = await Users.findByPk(userId);
+    const user = await Users.findByPk(userId, {attributes: ["usuario", "foto_principal"]});
     if (!user) throw new Error("No se encuentra el usuario");
    
   
@@ -60,10 +60,10 @@ const createPost = async (req, res) => {
     
       user.addPosts(newPost);
       newPost.addCategories(cate)
-      
+
       res.status(200).send({
         msg: "Post Creado Exitosamente",
-        post: newPost,
+        post: {...newPost.dataValues, user: user},
       });
   } catch (err) {
     res.status(500).send({ msg: "Error en el servidor: ", err: err.message });
