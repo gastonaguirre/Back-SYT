@@ -1,5 +1,6 @@
 const { Users, Posts, Categories } = require("../db");
 const { post } = require("../routes");
+const {deleteUser} = require("../controllers/userFunction.js")
 
 const getUsers = async (req, res) => {
   try {
@@ -96,10 +97,9 @@ const deleteIdUser = async (req, res) => {
   } catch (err) {
     res.status(500).send({ msg: "Error en el servidor: ", err: err.message });
   }
+  
 };
 
-<<<<<<< HEAD
-=======
 const deleteLogico =async (req, res)=>{
   try{
     const {id} =req.params;
@@ -108,13 +108,12 @@ const deleteLogico =async (req, res)=>{
     res.status(200).json(response);
 
   }catch(error){
-    res.status(400).json({msg:error.msg})
+    res.status(400).json({msg:error.msg}) 
   }
 }
 
 
 
->>>>>>> 5964201 (ahhah)
 const editUser = async (req, res) => {
   try {
     const { id } = req.params;
@@ -155,5 +154,8 @@ module.exports = {
   deleteIdUser,
   findOrCreate,
   perfilUser,
-  editUser
+  editUser,
+  inicioSesion,
+  deleteLogico,
+  // restoredata,
 };
