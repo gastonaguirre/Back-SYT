@@ -18,7 +18,7 @@ async function deleteUser (id,paranoid){
         return "Usuario eliminado correctamente "
     }
 }
-
+//nuevo pa 
 module.exports={
     deleteUser
 }

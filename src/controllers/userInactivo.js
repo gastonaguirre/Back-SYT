@@ -25,7 +25,7 @@ async function userRestore (id){
     })
     return (`Usuario restaurando Correctamente ${id}`)
 }
-
+//nuevo pa
 module.exports ={
     getUsersInactivo,
     userRestore,

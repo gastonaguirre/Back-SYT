@@ -1,6 +1,6 @@
 const { Users, Posts, Categories } = require("../db");
 const { post } = require("../routes");
-const {deleteUser} = require("../controllers/userFunction.js")
+const {deleteUser} = require("../controllers/userFunction.js")//s
 
 const getUsers = async (req, res) => {
   try {
@@ -109,27 +109,8 @@ const deleteLogico =async (req, res)=>{
   }catch(error){
     res.status(400).json({msg:error.msg})
   }
-
-
-
-
-
-  // let data =await Users.destroy({
-  //   where:{
-  //     id:2
-  //   }
-  // })
-  // res.status(200).json(data);
 }
-
-// const restoredata= async (req, res)=>{
-//   let data = await Users.restore({
-//     where:{
-//       id:1
-//     }
-//   })
-//   res.status(200).json(data);
-// }
+//nuevo pa
 
 const editUser = async (req, res) => {
   try {
