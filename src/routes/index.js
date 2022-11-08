@@ -6,7 +6,7 @@ const Users = require('./users')
 const Posts = require('./posts')
 const Categories = require('./categories')
 const userInactivo =require('./userInactivo')
-=======
+
 const Premium = require('./premium')
 const router = Router();
 
@@ -17,7 +17,7 @@ router.use('/users', Users)
 router.use('/posts', Posts)
 router.use('/categories', Categories)
 router.use('/userInactivo',userInactivo)
-=======
+
 router.use('/premium', Premium)
 
 

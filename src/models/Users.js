@@ -47,6 +47,10 @@ module.exports = (sequelize) => {
         type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: true,
       },
+      admin:{
+        type: DataTypes.BOOLEAN,
+        defaultValue:false
+      }
     },
     { 
       paranoid:true,
