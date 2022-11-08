@@ -15,7 +15,7 @@ async function deleteUser (id,paranoid){
             },
             force:true
         })
-        return "Usuario eliminado correctamente "
+        return "Usuario eliminado  correctamente "
     }
 }
 

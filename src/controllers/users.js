@@ -109,27 +109,9 @@ const deleteLogico =async (req, res)=>{
   }catch(error){
     res.status(400).json({msg:error.msg})
   }
-
-
-
-
-
-  // let data =await Users.destroy({
-  //   where:{
-  //     id:2
-  //   }
-  // })
-  // res.status(200).json(data);
 }
 
-// const restoredata= async (req, res)=>{
-//   let data = await Users.restore({
-//     where:{
-//       id:1
-//     }
-//   })
-//   res.status(200).json(data);
-// }
+
 
 const editUser = async (req, res) => {
   try {

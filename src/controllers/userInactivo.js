@@ -19,7 +19,7 @@ async function userRestore (id){
     const restoreUser = await Users.restore({
         where:{
             id:{
-                [Op.eq]:id
+                [Op.eq]: id
             },
         },
     })

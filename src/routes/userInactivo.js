@@ -1,6 +1,6 @@
 const {Router } = require ("express")
 const router = Router();
-const {getUsersInactivo, userRestore} = require ("../controllers/userInactivo.js")
+const {getUsersInactivo,  userRestore} = require ("../controllers/userInactivo.js")
 
 router.get("/", async (req, res)=>{
     try {
@@ -21,6 +21,6 @@ router.put("/:id", async (req, res) =>{
     }catch(error){
         res.status(400).json({msg: error.msg})
     }
-})
+})//s
 
 module.exports =router;
