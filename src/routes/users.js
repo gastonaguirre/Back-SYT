@@ -5,8 +5,6 @@ const {
   editUser,
   deleteLogico,
   findOrCreate,
- 
-  
 } = require("../controllers/users");
 
 const router = Router();

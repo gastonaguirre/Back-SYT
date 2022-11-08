@@ -3,12 +3,12 @@ module.exports = (sequelize) => {
   sequelize.define(
     "users",
     {
-       id:{
-         type:DataTypes.INTEGER,
-         autoIncrement:true,
-         allowNull: false,
-         primaryKey: true
-       },
+      //  id:{
+      //    type:DataTypes.INTEGER,
+      //    autoIncrement:true,
+      //    allowNull: false,
+      //    primaryKey: true
+      //  },
       usuario: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -56,10 +56,7 @@ module.exports = (sequelize) => {
         defaultValue:false,
       }
     },
-    { 
-      paranoid:true,
-      timestamps: true //false
-    }
+    { timestamps: false }
   );
 };
 //nuevo pa

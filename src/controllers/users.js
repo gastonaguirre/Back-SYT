@@ -152,8 +152,5 @@ module.exports = {
   deleteIdUser,
   findOrCreate,
   perfilUser,
-  editUser,
-  inicioSesion,
-  deleteLogico,
-  // restoredata,
+  editUser
 };

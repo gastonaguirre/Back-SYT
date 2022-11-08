@@ -29,19 +29,20 @@ const getAllPost = async (req, res) => {
 const createPost = async (req, res) => {
   try {
     const { titulo, texto, categories, userId } = req.body;
+    const arrayCate=JSON.parse(categories)
     if (!userId) throw new Error(" missing param id");
-    const user = await Users.findByPk(userId);
+    const user = await Users.findByPk(userId, {attributes: ["usuario", "foto_principal"]});
     if (!user) throw new Error("No se encuentra el usuario");
+  
     const cate = await Categories.findAll({
       where: {
-        name: categories,
+        name: arrayCate,
       },
     });
     
     const fields = {}
     if(titulo)  fields.titulo = titulo;
     if(texto)  fields.texto = texto;
-    if(categories.length)  fields.categories = categories;
     if(req.files){
       const ar = await uploadsArchivos(req.files.file.tempFilePath)
         let paraeliminar =  ar.public_id;
@@ -56,10 +57,10 @@ const createPost = async (req, res) => {
     
       user.addPosts(newPost);
       newPost.addCategories(cate)
-      
+
       res.status(200).send({
         msg: "Post Creado Exitosamente",
-        post: newPost,
+        post: {...newPost.dataValues, user: user},
       });
   } catch (err) {
     res.status(500).send({ msg: "Error en el servidor: ", err: err.message });
