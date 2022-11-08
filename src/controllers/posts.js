@@ -86,7 +86,7 @@ const eliminarPost = async (req, res) => {
     if(buscarid.media){await deleteArchivo(buscarid.url)}
     
     await buscarid.destroy();
-    res.status(200).json({ msg: "Se elimino el posteo" }); 
+    res.status(200).json({ msg: "Se elimino el posteo",buscarid }); 
   } catch (err) {
     res.status(500).send({ msg: "Error en el servidor: ", err: err.message });
   }
