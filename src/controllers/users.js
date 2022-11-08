@@ -122,14 +122,14 @@ const deleteIdUser = async (req, res) => {
     });    
   } catch (err) {
     res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
-  }
+  } 
 };
 
 const deleteLogico =async (req, res)=>{
   try{
     const {id} =req.params;
     const {paranoid}= req.body
-    const response = await deleteUser(id,true);
+    const response = await deleteUser(id,paranoid);
     res.status(200).json(response);
 
   }catch(error){

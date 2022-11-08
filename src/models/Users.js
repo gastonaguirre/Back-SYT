@@ -50,7 +50,7 @@ module.exports = (sequelize) => {
     },
     { 
       paranoid:true,
-      timestamps: true //false
+      timestamps: true
     }
   );
 };
