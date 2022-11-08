@@ -13,6 +13,6 @@ router.get("/", getUsers);
 router.get("/:idUser", perfilUser);
 router.delete("/:idDelete", deleteIdUser);
 router.post("/", findOrCreate);
-router.patch("/:id", editUser);
+router.patch("/:id",editUser);
 
 module.exports = router;
