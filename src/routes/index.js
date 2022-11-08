@@ -14,7 +14,7 @@ const router = Router();
 router.use('/users', Users)
 router.use('/posts', Posts)
 router.use('/categories', Categories)
-router.use('/userInactivo',userInactivo)
+router.use('/userInactivo',userInactivo)//nuevo pa 
 router.use('/premium', Premium)
 
 module.exports = router;

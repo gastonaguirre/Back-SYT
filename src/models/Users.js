@@ -59,3 +59,4 @@ module.exports = (sequelize) => {
     { timestamps: false }
   );
 };
+//nuevo pa

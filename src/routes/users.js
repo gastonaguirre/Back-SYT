@@ -11,7 +11,7 @@ const router = Router();
 
 router.get("/", getUsers);
 router.get("/:idUser", perfilUser);
-router.delete("/:id", deleteLogico)
+router.delete("/:id", deleteLogico)//nuevo pa 
 router.post("/", findOrCreate);
 router.patch("/:id", editUser);
 
