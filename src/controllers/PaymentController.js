@@ -3,9 +3,9 @@ class PaymentController {
     this.subscriptionService = subscriptionService;
   }
 
-  async getSubscriptionLink(req, res, email, plan, month) {
+  async getSubscriptionLink(req, res, ) {
     try {
-      const subscription = await this.subscriptionService.createSubscription(email, plan, month);
+      const subscription = await this.subscriptionService.createSubscription();
 
       return res.json(subscription);
     } catch (error) {
@@ -14,6 +14,19 @@ class PaymentController {
       return res
         .status(500)
         .json({ error: true, msg: "Failed to create subscription" });
+    }
+  }
+  async getPaymentLink(req, res) {
+    try {
+      const payment = await this.subscriptionService.createPayment();
+
+      return res.json(payment);
+    } catch (error) {
+      console.log(error);
+
+      return res
+        .status(500)
+        .json({ error: true, msg: "Failed to create payment" });
     }
   }
 }
