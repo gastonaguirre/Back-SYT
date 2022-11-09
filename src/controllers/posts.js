@@ -29,16 +29,16 @@ const getAllPost = async (req, res) => {
 const createPost = async (req, res) => {
   try {
     const { titulo, texto, categories, userId } = req.body;
-    const arrayCate=JSON.parse(categories)
+    // const arrayCate=JSON.parse(categories)
     if (!userId) throw new Error(" missing param id");
     const user = await Users.findByPk(userId, {attributes: ["usuario", "foto_principal"]});
     if (!user) throw new Error("No se encuentra el usuario");
   
-    const cate = await Categories.findAll({
-      where: {
-        name: arrayCate,
-      },
-    });
+    // const cate = await Categories.findAll({
+    //   where: {
+    //     name: arrayCate,
+    //   },
+    // });
     
     const fields = {}
     if(titulo)  fields.titulo = titulo;
@@ -56,7 +56,7 @@ const createPost = async (req, res) => {
       if (!newPost) throw new Error("No se pudo crear el post");
     
       user.addPosts(newPost);
-      newPost.addCategories(cate)
+      // newPost.addCategories(cate)
 
       res.status(200).send({
         msg: "Post Creado Exitosamente",
