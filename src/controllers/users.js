@@ -6,7 +6,6 @@ const getUsers = async (req, res) => {
     const data = await Users.findAll();
     if (!data.length) throw new Error ("No hay usuarios en la base de datos")
 
-   
     res.status(200).json(data);
   } catch (err) {
     res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
@@ -34,6 +33,7 @@ const inicioSesion = async (req, res) => {
   }
 };
 
+
 const perfilUser = async (req, res) => {
   try {
     const { idUser } = req.params;
@@ -59,7 +59,7 @@ const perfilUser = async (req, res) => {
   }
 };
 
-const postUser = async (req, res) => {
+const findOrCreate = async (req, res) => {
   try {
     let { usuario, email, foto_principal, foto_portada } = req.body;    
     const [user, created] = await Users.findOrCreate({
@@ -72,7 +72,11 @@ const postUser = async (req, res) => {
       foto_portada:foto_portada || "https://pits-agroforestal.net/wp-content/themes/merlin/images/default-slider-image.png",
       },  
     })
+<<<<<<< HEAD
     if(!created)  return res.status(200).send({ msg: "So vo amigo" ,user: user })
+=======
+    if(!created)  return res.status(200).send({ msg: "So vo amigo", user: user })
+>>>>>>> c40a7f589618eeabf9d2f868427aa5e34459fe89
     res.status(200).send({
       msg: "Usuario Creado Exitosamente",
       user: user,
@@ -121,7 +125,7 @@ const editUser = async (req, res) => {
     if (descripcion) fields.descripcion = descripcion;
     if (socials_links) fields.socials_links = socials_links;
 
-    if (fields === {}) throw new Error("No se recibieron parametros para cambiar");
+    if (fields === {}) throw new Error({msg:"No se recibieron parametros para cambiar cosas"});
     
     await findUser.update(fields);
     res.status(200).json({
@@ -165,10 +169,13 @@ async function restoreUser(id){
 module.exports = {
   getUsers,
   deleteIdUser,
-  postUser,
+  findOrCreate,
   perfilUser,
   editUser,
+<<<<<<< HEAD
   inicioSesion,
   getUsersInactive,
   restoreUser,
+=======
+>>>>>>> c40a7f589618eeabf9d2f868427aa5e34459fe89
 };
