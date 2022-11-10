@@ -6,8 +6,7 @@ const getUsers = async (req, res) => {
   try {
     const data = await Users.findAll();
     if (!data.length) throw new Error ("No hay usuarios en la base de datos")
-    // res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
-   
+
     res.status(200).json(data);
   } catch (err) {
     res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
@@ -28,22 +27,13 @@ const inicioSesion = async (req, res) => {
     if (!buscarInput) throw new Error ("usuario o email no encontrado")
     if (contraseña !== buscarInput.contraseña) throw new Error ("contraseña incorrecta")
     res.status(200).send({ user: buscarInput });
-    // const cositas = req.oidc.user
-    // console.log(cositas)
-    // const name = cositas.nickname;
 
-    // let createUser = await Users.create({
-    //     usuario : cositas.nickname,
-    //     email: cositas.email,
-    //     foto_principal:cositas.picture || "https://st3.depositphotos.com/4111759/13425/v/600/depositphotos_134255588-stock-illustration-empty-photo-of-male-profile.jpg" ,
-    //     foto_portada: cositas.picture ||"https://pits-agroforestal.net/wp-content/themes/merlin/images/default-slider-image.png"
-    //   });
-    
     res.status(200).json(createUser)
   } catch (err) {
     res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   }
 };
+
 
 const perfilUser = async (req, res) => {
   try {
@@ -66,11 +56,11 @@ const perfilUser = async (req, res) => {
     res.status(200).send({ user: buscar });
    
   } catch (err) {
-    res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
+    res.status(500).send({ msg: "Error en el servidor: ", err: err.message });
   }
 };
 
-const postUser = async (req, res) => {
+const findOrCreate = async (req, res) => {
   try {
     let { usuario, email, foto_principal, foto_portada } = req.body;    
     const [user, created] = await Users.findOrCreate({
@@ -88,22 +78,6 @@ const postUser = async (req, res) => {
       msg: "Usuario Creado Exitosamente",
       user: user,
     })
-
-    // const buscarEmail = await Users.findOne({
-    //   where:{
-    //     email: expReg
-    //   }
-    // })
-    // if(buscarEmail){
-    //   res.status(200).send("User ya existente")
-    
-    // }
-    // let createUser = await Users.create({
-    //   usuario,
-    //   email,
-    //   foto_principal:foto_principal || "https://st3.depositphotos.com/4111759/13425/v/600/depositphotos_134255588-stock-illustration-empty-photo-of-male-profile.jpg" ,
-    //   foto_portada:foto_portada || "https://pits-agroforestal.net/wp-content/themes/merlin/images/default-slider-image.png"
-    // });
   } catch (err) {
     res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   }
@@ -123,7 +97,9 @@ const deleteIdUser = async (req, res) => {
   } catch (err) {
     res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   } 
-};
+
+    res.status(500).send({ msg: "Error en el servidor: ", err: err.message });
+  }
 
 const deleteLogico =async (req, res)=>{
   try{
@@ -135,19 +111,14 @@ const deleteLogico =async (req, res)=>{
   }catch(error){
     res.status(400).json({msg:error.msg})
   }
-
-
-
-
-
-  // let data =await Users.destroy({
+  
+}
+// let data =await Users.destroy({
   //   where:{
   //     id:2
   //   }
   // })
   // res.status(200).json(data);
-}
-
 // const restoredata= async (req, res)=>{
 //   let data = await Users.restore({
 //     where:{
@@ -180,7 +151,7 @@ const editUser = async (req, res) => {
     if (descripcion) fields.descripcion = descripcion;
     if (socials_links) fields.socials_links = socials_links;
 
-    if (fields === {}) throw new Error("No se recibieron parametros para cambiar");
+    if (fields === {}) throw new Error({msg:"No se recibieron parametros para cambiar cosas"});
     
     await findUser.update(fields);
     res.status(200).json({
@@ -188,14 +159,14 @@ const editUser = async (req, res) => {
       user: findUser,
     });
   } catch (err) {
-    res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
+    res.status(500).send({ msg: "Error en el servidor: ", err: err.message });
   }
 };
 
 module.exports = {
   getUsers,
   deleteIdUser,
-  postUser,
+  findOrCreate,
   perfilUser,
   editUser,
   inicioSesion,
