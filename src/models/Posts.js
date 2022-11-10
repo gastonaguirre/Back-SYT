@@ -20,9 +20,13 @@ module.exports = (sequelize) => {
       media: {
         type: DataTypes.STRING,
       },
-      url:{
-        type:DataTypes.STRING
-      }
+      url: {
+        type: DataTypes.STRING,
+      },
+      premium: {
+        type: DataTypes.ENUM("Principiante", "Avanzado", "Experto"),
+        allowNull: false,
+      },
     },
     { timestamps: true }
   );
