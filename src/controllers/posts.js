@@ -28,7 +28,7 @@ const getAllPost = async (req, res) => {
 
 const createPost = async (req, res) => {
   try {
-    const { titulo, texto, categories, userId } = req.body;
+    const { titulo, texto, categories, userId,premium } = req.body;
     const arrayCate=JSON.parse(categories)
     if (!userId) throw new Error(" missing param id");
     const user = await Users.findByPk(userId, {attributes: ["usuario", "foto_principal"]});
@@ -43,6 +43,7 @@ const createPost = async (req, res) => {
     const fields = {}
     if(titulo)  fields.titulo = titulo;
     if(texto)  fields.texto = texto;
+    if(premium) fields.premium=premium
     if(req.files){
       const ar = await uploadsArchivos(req.files.file.tempFilePath)
         let paraeliminar =  ar.public_id;
@@ -51,6 +52,7 @@ const createPost = async (req, res) => {
       fields.media = url;
       await fs.unlink(req.files.file.tempFilePath)
     }
+    console.log(fields)
     fields.userId = userId
       const newPost = await Posts.create(fields);
       if (!newPost) throw new Error("No se pudo crear el post");
