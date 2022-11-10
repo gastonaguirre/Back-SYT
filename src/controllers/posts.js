@@ -15,11 +15,13 @@ const getAllPost = async (req, res) => {
           attributes: ["name"],
           through: {attributes : []}
         },
-      ]
+    
+      ],
     });
+    const userActivos = data.filter((e)=> e.user ) 
     if (!data.length) throw new Error ("No hay posts en la base de datos")
-
-    res.status(200).json(data);   
+    
+    res.status(200).json(userActivos);   
   } catch (err) {
     res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   }
