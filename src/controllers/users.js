@@ -2,6 +2,7 @@ const { Users, Posts, Categories } = require("../db");
 const { post } = require("../routes");
 const {deleteUser} = require("../controllers/userFunction.js")
 
+const {sendMail} = require("./mailer")
 const getUsers = async (req, res) => {
   try {
     const data = await Users.findAll();
@@ -73,7 +74,12 @@ const findOrCreate = async (req, res) => {
       foto_portada:foto_portada || "https://pits-agroforestal.net/wp-content/themes/merlin/images/default-slider-image.png",
       },  
     })
-    if(!created)  return res.status(200).send({ msg: "So vo amigo", user: user })
+    if(!created)  {
+      return res.status(200).send({ msg: "So vo amigo", user: user })
+    }
+
+   await  sendMail( usuario,email)
+
     res.status(200).send({
       msg: "Usuario Creado Exitosamente",
       user: user,
@@ -149,6 +155,27 @@ const editUser = async (req, res) => {
   }
 };
 
+const userPremiun =async (req, res)=>{
+  try{
+    const {id} =req.params;
+    const findUser = await Users.findByPk(id);
+    if (!findUser) throw new Error("No se ha encontrado un usuario existente con el id ingresado");
+    const fields = {};
+    fields.premiun = true;
+    await findUser.update(fields); 
+    
+    
+    res.status(200).json({
+      msg:"Ahora sos  Premium PAPA",
+      user:findUser,
+    });
+
+  }catch(error){
+    res.status(400).json({msg:error.msg}) 
+  }
+}
+
+
 module.exports = {
   getUsers,
   deleteIdUser,
@@ -157,5 +184,6 @@ module.exports = {
   editUser,
   inicioSesion,
   deleteLogico,
+  userPremiun
   // restoredata,
 };

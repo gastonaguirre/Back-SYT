@@ -20,6 +20,8 @@ module.exports = (sequelize) => {
       media: {
         type: DataTypes.STRING,
       },
+
+      
       url: {
         type: DataTypes.STRING,
       },

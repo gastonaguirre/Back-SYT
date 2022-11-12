@@ -1,0 +1,10 @@
+{
+    "service": "gmail",
+    "auth": {
+      "type": "OAuth2",
+      "user": "TU_CORREO___OJO____@gmail.com",
+      "clientId": "859658810637-66g5hi8q8m9jgaq2qout2ghp2crmdcke.apps.googleusercontent.com",
+      "clientSecret": "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",
+      "refreshToken": "1//04Sj2tINeILOJCgYIARAAGAQSNwF-L9Ir7hNraZSjZCluxP5huOqjB_dK0qxPqq1ESW_6dckjrRbEgDcA-VbSQHP49MbNZ3xQ3AA"
+    }
+}

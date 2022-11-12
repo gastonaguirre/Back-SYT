@@ -15,11 +15,13 @@ const getAllPost = async (req, res) => {
           attributes: ["name"],
           through: { attributes: [] },
         },
+
       ],
     });
     if (!data.length) throw new Error("No hay posts en la base de datos");
 
     res.status(200).json(data);
+
   } catch (err) {
     res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   }
@@ -27,13 +29,16 @@ const getAllPost = async (req, res) => {
 
 const createPost = async (req, res) => {
   try {
+
     const { titulo, texto, categories, userId, premium } = req.body;
     const arrayCate = JSON.parse(categories);
+
     if (!userId) throw new Error(" missing param id");
     const user = await Users.findByPk(userId, {
       attributes: ["usuario", "foto_principal"],
     });
     if (!user) throw new Error("No se encuentra el usuario");
+
 
     const cate = await Categories.findAll({
       where: {
@@ -93,7 +98,8 @@ const eliminarPost = async (req, res) => {
     }
 
     await buscarid.destroy();
-    res.status(200).json({ msg: "Se elimino el posteo" });
+
+    res.status(200).json({ msg: "Se elimino el posteo",posts:buscarid }); 
   } catch (err) {
     res.status(500).send({ msg: "Error en el servidor: ", err: err.message });
   }
@@ -124,5 +130,24 @@ const editPost = async (req, res) => {
     res.status(500).send({ msg: "Error en el servidor", error: err.message });
   }
 };
+const aumenLikePost =async (req, res)=>{
+  try{
+    const {id} =req.params;
+    const findPost = await Posts.findByPk(id);
+    if (!findPost) throw new Error("No se ha encontrado un post existente con el id ingresado");
+    const fields = {};
+    fields.likes = +1;
+    await findPost.update(fields); 
+    
+    
+    res.status(200).json({
+      msg:"+1",
+      post:findPost,
+    });
 
-module.exports = { getAllPost, createPost, detailPost, eliminarPost, editPost };
+  }catch(error){
+    res.status(400).json({msg:error.msg}) 
+  }
+}
+
+module.exports = { getAllPost, createPost, detailPost, eliminarPost, editPost ,aumenLikePost};
