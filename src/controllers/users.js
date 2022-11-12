@@ -172,6 +172,7 @@ const userPremiun =async (req, res)=>{
 
   }catch(error){
     res.status(400).json({msg:error.msg}) 
+    console.log(error)
   }
 }
 
