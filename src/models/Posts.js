@@ -22,6 +22,10 @@ module.exports = (sequelize) => {
       },
       url:{
         type:DataTypes.STRING
+      },
+      likes:{
+        type:DataTypes.INTEGER,
+        defaultValue:0
       }
     },
     { timestamps: true }

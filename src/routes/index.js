@@ -15,6 +15,6 @@ router.use('/categories', Categories)
 router.use('/premium', Premium)
 
 router.use('/userInactivo',userInactivo )
-router.use("/report",Emails)
+router.use("/send",Emails)
 
 module.exports = router;

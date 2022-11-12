@@ -1,10 +1,30 @@
-const {enviarEmailsPost}= require("../controllers/mailer");
+// const {enviarEmailsPost}= require("../controllers/mailer");
+// const {sendMail}= require("../controllers/mailer");
 
 const { Router } = require('express');
 const router = Router();
 
+const {sendMail, sendMailReport} = require("../controllers/mailer")
 
-router.post("/emails",enviarEmailsPost)
+router.post("/emails",async(req,res)=>{
+    
+        const {name , email}=req.body
+   try {
+    let mensage =await sendMail(name,email)
+    res.status(200).json({mensage})
+   } catch (error) {
+    res.status(500).json({msg:error})
+   } 
+})
+router.post("/emails/report",async(req,res)=>{
+try {
+    const {name ,email, msg, usarioreport,tituloPost}= req.body
+    let mensage =await sendMailReport(name,email,msg,usarioreport,tituloPost)
+    res.status(200).json({mensage})
+} catch (error) {
+    res.status(500).json({msg:error})
+}
+})
 
 
 module.exports = router;

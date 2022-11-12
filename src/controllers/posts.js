@@ -88,7 +88,7 @@ const eliminarPost = async (req, res) => {
     if(buscarid.media){await deleteArchivo(buscarid.url)}
     
     await buscarid.destroy();
-    res.status(200).json({ msg: "Se elimino el posteo" }); 
+    res.status(200).json({ msg: "Se elimino el posteo",posts:buscarid }); 
   } catch (err) {
     res.status(500).send({ msg: "Error en el servidor: ", err: err.message });
   }
@@ -116,5 +116,24 @@ const editPost = async (req, res) => {
     res.status(500).send({msg: "Error en el servidor", error: err.message});
   }
 };
+const aumenLikePost =async (req, res)=>{
+  try{
+    const {id} =req.params;
+    const findPost = await Posts.findByPk(id);
+    if (!findPost) throw new Error("No se ha encontrado un post existente con el id ingresado");
+    const fields = {};
+    fields.likes = +1;
+    await findPost.update(fields); 
+    
+    
+    res.status(200).json({
+      msg:"+1",
+      post:findPost,
+    });
 
-module.exports = { getAllPost, createPost, detailPost, eliminarPost, editPost };
+  }catch(error){
+    res.status(400).json({msg:error.msg}) 
+  }
+}
+
+module.exports = { getAllPost, createPost, detailPost, eliminarPost, editPost ,aumenLikePost};
