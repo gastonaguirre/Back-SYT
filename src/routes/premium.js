@@ -12,14 +12,14 @@ try {
     items: [
       {
         title: "Mi producto",
-        unit_price: 5,
+        unit_price: 4,
         quantity: 1,
       },
     ],
     back_urls: {
-			"success": "http://localhost:3001/premium/feedback",
-			"failure": "http://localhost:3001/premium/feedback",
-			"pending": "http://localhost:3001/premium/feedback"
+			"success": "http://localhost:3000/",
+			"failure": "http://localhost:3000/",
+			"pending": "http://localhost:3000/"
 		},
 		auto_return: "approved",
   };
@@ -35,9 +35,7 @@ try {
 router.get('/feedback', function (req, res) {
   
 	res.json({
-		Payment: req.query.payment_id,
 		Status: req.query.status,
-		MerchantOrder: req.query.merchant_order_id,
 	});
 });
 
