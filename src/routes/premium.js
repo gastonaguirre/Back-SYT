@@ -38,7 +38,6 @@ router.get('/feedback', function (req, res) {
 		Payment: req.query.payment_id,
 		Status: req.query.status,
 		MerchantOrder: req.query.merchant_order_id,
-    html:`<a href="http://localhost:3001/profile" target="_blank">volve a la pagina </a>`
 	});
 });
 
