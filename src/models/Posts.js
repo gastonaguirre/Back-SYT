@@ -27,6 +27,9 @@ module.exports = (sequelize) => {
         type: DataTypes.ENUM("Principiante", "Avanzado", "Experto"),
         allowNull: false,
       },
+      likes:{
+        type:DataTypes.ARRAY(DataTypes.INTEGER)
+      }
     },
     { timestamps: true }
   );
