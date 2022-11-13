@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer")
 const { google } = require("googLeapis");
 const { GMAIL_CLIENT_ID,GNAIL_CLIENT_SECRET,GMAIL_REFRESH_TOKEN,GAMIL_REDIRECT } = process.env;
-
+const { Users} = require("../db");
 const CLIENTID = GMAIL_CLIENT_ID
 const CLIENTSECRET=GNAIL_CLIENT_SECRET
 const REFRESHTOKEN=GMAIL_REFRESH_TOKEN
@@ -100,9 +100,68 @@ async function sendMailReport(name,email,msg, usarioreport , tituloPost){
         res.status(500).json({msg:error})
     }
 }
+async function sendEmailPremium(name,email,msg){
+    
+    try{
+
+        const contentHtmlAdmin= `<h1>SYT ALGUIEN COMPRO LA PREMIUM </h1>
+        <h2>NOMBRE DEL USUARIO QUE ADQUIRIO EL PREMIUM : ${name} , con el email: ${email} </h2>
+        <p>DATOS DEL  LA COMPRA ${msg}</p>
+        `
+        const contentHtml = `
+                <h1>SYT Gracias por hacer Premium PAPA!!!!!!!!!!!</h1>
+                <h2>CON el nickname de : ${name} , con el email: ${email} </h2>
+                <p>DATOS DE LA COMPRA ${msg}</p>
+                `
+
+        const accessToken= await oAuth2client.getAccessToken()
+      const transporter =  nodemailer.createTransport({
+            service:"gmail",
+            auth:{
+                type:"OAuth2",
+                user:"luis2003nb@gmail.com",
+                clientId:CLIENTID,
+                clientSecret:CLIENTSECRET,
+                refreshToken:REFRESHTOKEN,
+                accessToken
+            }
+        })
+        const mailOptions= {
+            from: "PAgina ",
+            to:email,
+            subject:"<TE PUSISTE LA GORRA, GRACIAS PA BESITOS>",
+            html: contentHtml
+        }
+        const mailOptionsAdmin={
+            from: "PAgina ",
+            to:"luis2003nb@gmail.com",
+            subject:"<UN USUARIO ROMPIO LAS REGLAS DE SYT >",
+            html: contentHtmlAdmin
+        }
+
+          await transporter.sendMail(mailOptions)
+          await transporter.sendMail(mailOptionsAdmin)
+        
+    }catch(error){
+        res.status(500).json({msg:error})
+    }
+}
+
+async function hacerPremium(id){
+
+    const findUser = await Users.findByPk(id);
+    if (!findUser) throw new Error("No se ha encontrado un usuario existente con el id ingresado");
+    const fields = {};
+    fields.premiun = true;
+    await findUser.update(fields); 
+
+}
+
 
 
 module.exports ={
     sendMail,
-    sendMailReport
+    sendMailReport,
+    sendEmailPremium,
+    hacerPremium
 }

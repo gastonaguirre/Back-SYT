@@ -1,8 +1,8 @@
 const { Router } = require('express');
 const router = Router();
 
-const {sendMail, sendMailReport} = require("../controllers/mailer")
-
+const {sendMail, sendMailReport,sendEmailPremium } = require("../controllers/mailer")
+const {userPremiun} = require("../routes/users")
 router.post("/emails",async(req,res)=>{
     
         const {name , email}=req.body
@@ -25,6 +25,20 @@ try {
 } catch (error) {
     res.status(500).json({msg:error})
 }
+})
+router.post("/emails/premium",async(req,res)=>{
+    try {
+        const {name ,email, msg ,id}= req.body
+        if (name && email && msg ){
+
+            let mensage =await sendEmailPremium(name,email,msg)
+            res.status(200).json({mensage,repon : "AHORA SOS PREMIUM "})
+        }else{
+            res.status(500).json({msg:"faltan datos"})
+        }
+    } catch (error) {
+        res.status(500).json({msg:error})
+    }
 })
 
 
