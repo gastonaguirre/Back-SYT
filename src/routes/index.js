@@ -7,6 +7,7 @@ const Posts = require('./posts')
 const Categories = require('./categories')
 const userInactivo =require('./userInactivo')
 const Premium = require('./premium')
+const Comments = require('./comments')
 const router = Router();
 
 // Configurar los routers
@@ -17,6 +18,8 @@ router.use('/posts', Posts)
 router.use('/categories', Categories)
 router.use('/userInactivo',userInactivo)
 router.use('/premium', Premium)
+router.use ('/comments',Comments)
+
 
 
 router.post("/admin", async(req, res) => {
