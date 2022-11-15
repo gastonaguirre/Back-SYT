@@ -54,6 +54,10 @@ module.exports = (sequelize) => {
       premiun:{
         type: DataTypes.BOOLEAN,
         defaultValue:false
+      },
+      baneado:{
+        type: DataTypes.BOOLEAN,
+        defaultValue:false
       }
     },
     { 

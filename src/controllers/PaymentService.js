@@ -1,7 +1,7 @@
 const axios = require("axios");
 
 class PaymentService {
-  
+
   async createSubscription(email, plan, month) {
     const url = "https://api.mercadopago.com/preapproval";
 
@@ -13,7 +13,7 @@ class PaymentService {
         transaction_amount: plan,
         currency_id: "ARS"
       },
-      back_url: "https://google.com.ar",
+      back_url: "https://google.com.ar/",
       payer_email: email
     };
 

@@ -5,6 +5,7 @@ const {
   detailPost,
   eliminarPost,
   editPost,
+  
 } = require("../controllers/posts");
 const fileUpload = require("express-fileupload")
 const router = Router();
