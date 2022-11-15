@@ -17,9 +17,9 @@ try {
       },
     ],
     back_urls: {
-			"success": "http://localhost:3000/",
-			"failure": "http://localhost:3000/",
-			"pending": "http://localhost:3000/"
+			"success": "http://localhost:3001/premium/feedback",
+			"failure": "http://localhost:3001/premium/feedback",
+			"pending": "http://localhost:3001/premium/feedback"
 		},
 		auto_return: "approved",
   };
@@ -33,9 +33,13 @@ try {
     // En esta instancia deberás asignar el valor dentro de response.body.id por el ID de preferencia solicitado en el siguiente paso
 })
 router.get('/feedback', function (req, res) {
-  
+  JSON.stringify(req.query)
 	res.json({
+    msg :"ACA ESTOY",
+		// Payment: req.query.payment_id,
 		Status: req.query.status,
+		// MerchantOrder: req.query.merchant_order_id,
+    msge :"Final"
 	});
 });
 

@@ -4,7 +4,6 @@ const router = Router();
 const {sendMail, sendMailReport} = require("../controllers/mailer")
 
 router.post("/emails",async(req,res)=>{
-    
         const {name , email}=req.body
    try {
     let mensage =await sendMail(name,email)
@@ -26,6 +25,15 @@ try {
     res.status(500).json({msg:error})
 }
 })
+
+router.post("/emails/premium",async(req,res)=>{
+    try {
+        
+           console.log( req.body)    
+    } catch (error) {
+        res.status(500).json({msg:error})
+    }
+    })
 
 
 module.exports = router;
