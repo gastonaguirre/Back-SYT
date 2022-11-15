@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer")
-const { google } = require("googLeapis");
+const { google } = require("googleapis");
 const { GMAIL_CLIENT_ID,GNAIL_CLIENT_SECRET,GMAIL_REFRESH_TOKEN,GAMIL_REDIRECT } = process.env;
 
 const CLIENTID = GMAIL_CLIENT_ID
