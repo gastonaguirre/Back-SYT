@@ -47,9 +47,9 @@ async function sendMail(name,email){
             subject:"< SYT MENSAJE DE BIENVENIDA>",
             html: contentHtml
         }
-    await transporter.sendMail(mailOptions)
+  const emailBienvenida=  await transporter.sendMail(mailOptions)
 
-   
+   res.status(200).json({msg:emailBienvenida})
     }catch(error){
         res.status(500).json({msg:error})
     }
@@ -93,16 +93,62 @@ async function sendMailReport(name,email,msg, usarioreport , tituloPost){
             subject:"<UN USUARIO ROMPIO LAS REGLAS DE SYT >",
             html: contentHtmlAdmin
         }
-          await transporter.sendMail(mailOptions)
-          await transporter.sendMail(mailOptionsAdmin)
-        
+        const emailReport = await transporter.sendMail(mailOptions)
+        const emailReportumAdmin = await transporter.sendMail(mailOptionsAdmin)
+        return emailReport, emailReportumAdmin
     }catch(error){
         res.status(500).json({msg:error})
+    }
+}
+
+async function sendMailPremium(name,email,msg){
+    
+    try{
+        const contentHtmlAdmin= `<h1>SYT solicitud de PREMIUM</h1>
+        <h2>DATOS DEL USUARIO QUE COMPRO PREMIUM enviado de : ${name} , con el email: ${email} </h2>
+        <p>DATA DEL PAGO:${msg}</p>
+        `
+        const contentHtml = `
+                <h1>SYT GRACIAS PAPA POR HACERTE PREMIUM</h1>
+                <h2>TE HICISTE PREMIUM CON ESTE USUARIO name : ${name} ,  email: ${email} </h2>
+                <p>DATOS DE LA COMPRA : ${msg}</p>
+                `
+
+        const accessToken= await oAuth2client.getAccessToken()
+      const transporter =  nodemailer.createTransport({
+            service:"gmail",
+            auth:{
+                type:"OAuth2",
+                user:"luis2003nb@gmail.com",
+                clientId:CLIENTID,
+                clientSecret:CLIENTSECRET,
+                refreshToken:REFRESHTOKEN,
+                accessToken
+            }
+        })
+        const mailOptions= {
+            from: "PAgina ",
+            to:email,
+            subject:"<TE LA PUEDO ..., GRACIAS PA BESITOS>",
+            html: contentHtml
+        }
+        const mailOptionsAdmin={
+            from: "PAgina ",
+            to:"luis2003nb@gmail.com",
+            subject:"<UN USUARIO PAGO PREMIUM DE SYT >",
+            html: contentHtmlAdmin
+        }
+   const emailPremium =  await transporter.sendMail(mailOptions)
+   const emailPremiumAdmin =  await transporter.sendMail(mailOptionsAdmin)
+        return emailPremium , emailPremiumAdmin
+    }catch(error){
+        return error
     }
 }
 
 
 module.exports ={
     sendMail,
-    sendMailReport
+    sendMailReport,
+    sendMailPremium
 }

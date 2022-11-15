@@ -33,14 +33,23 @@ try {
     // En esta instancia deberás asignar el valor dentro de response.body.id por el ID de preferencia solicitado en el siguiente paso
 })
 router.get('/feedback', function (req, res) {
-  JSON.stringify(req.query)
-	res.json({
-    msg :"ACA ESTOY",
-		// Payment: req.query.payment_id,
-		Status: req.query.status,
-		// MerchantOrder: req.query.merchant_order_id,
-    msge :"Final"
-	});
+  try {
+    if (req.query.payment_id && req.query.status && req.query.merchant_order_id){
+    res.json({
+      msg :"ACA ESTOY",
+      Payment: req.query.payment_id,
+      Status: req.query.status,
+      MerchantOrder: req.query.merchant_order_id,
+      msge :"Final"
+    });
+    }else{
+      throw new Error(	
+        "No se ha encontrado una categoria existente con el id ingresado."	
+      )
+    }
+  } catch (error) {
+    res.status(500).send({msg: "algo anda mal"})
+  }
 });
 
 module.exports = router;
