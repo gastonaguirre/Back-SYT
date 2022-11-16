@@ -174,6 +174,24 @@ const userPremiun =async (req, res)=>{
     res.status(400).json({msg:error.msg}) 
   }
 }
+const userAdmin =async(req,res)=>{
+try {
+  const {id} =req.params;
+    const findUser = await Users.findByPk(id);
+    if (!findUser) throw new Error("No se ha encontrado un usuario existente con el id ingresado");
+    const fields = {};
+    fields.admin = true;
+    await findUser.update(fields); 
+    res.status(200).json({
+      msg:"Ahora sos  Premium PAPA",
+      user:findUser,
+    });
+
+} catch (error) {
+  res.status(500).json({msg:"Algo salio mal"})
+}
+
+}
 
 
 module.exports = {
@@ -184,6 +202,7 @@ module.exports = {
   editUser,
   inicioSesion,
   deleteLogico,
-  userPremiun
+  userPremiun,
+  userAdmin,
   // restoredata,
 };

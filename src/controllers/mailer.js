@@ -95,7 +95,7 @@ async function sendMailReport(name,email,msg, usarioreport , tituloPost){
         }
         const emailReport = await transporter.sendMail(mailOptions)
         const emailReportumAdmin = await transporter.sendMail(mailOptionsAdmin)
-        return emailReport, emailReportumAdmin
+        return emailReport
     }catch(error){
         res.status(500).json({msg:error})
     }
@@ -140,7 +140,7 @@ async function sendMailPremium(name,email,msg){
         }
    const emailPremium =  await transporter.sendMail(mailOptions)
    const emailPremiumAdmin =  await transporter.sendMail(mailOptionsAdmin)
-        return emailPremium , emailPremiumAdmin
+   
     }catch(error){
         return error
     }
