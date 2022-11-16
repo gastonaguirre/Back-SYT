@@ -1,8 +1,47 @@
 const { Posts, Users, Categories } = require("../db");
 const { uploadsArchivos, deleteArchivo } = require("../cloudinary/cloudinary");
 const fs = require("fs-extra");
+const { Op } = require("sequelize");
+
+// router.get("/countries",async(req,res)=>{
+//   const name = req.query.name
+  
+//   try{
+//      if(name){
+//          let nombresiestan = await Country.findAll({ 
+//            where: { name: { [Op.iLike]: `%${name}%` } }
+//          })
+//          nombresiestan.length ? res.status(200).json(nombresiestan) : res.status(404).send('No se encontro el Pais');
+  
+
 const getAllPost = async (req, res) => {
-  try {
+
+    const titulo = req.query.titulo
+    console.log(titulo)
+    try {
+       if(titulo){
+        let tituloFind = await Posts.findAll({
+          where: {titulo: { [Op.iLike]: `%${titulo}%`}},
+          include: [
+            {
+              model: Users,
+              attributes: ["usuario", "foto_principal"],
+            },
+            {
+              model: Categories,
+              attributes: ["name"],
+              through: { attributes: [] },
+            },
+    
+          ],
+        })
+        if(!titulo.length){
+          res.status(404).send('No se encontro el titulo');
+        }else{
+          console.log(tituloFind)
+          res.status(200).json(tituloFind)
+        }
+       }else{
     let data = await Posts.findAll({
       order: [["createdAt", "DESC"]],
       include: [
@@ -22,7 +61,7 @@ const getAllPost = async (req, res) => {
 
     res.status(200).json(data);
 
-  } catch (err) {
+  }} catch (err) {
     res.status(500).send({ msg: "Erorr en el servidor: ", err: err.message });
   }
 };
