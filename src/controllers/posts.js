@@ -17,7 +17,6 @@ const { Op } = require("sequelize");
 const getAllPost = async (req, res) => {
 
     const titulo = req.query.titulo
-    console.log(titulo)
     try {
        if(titulo){
         let tituloFind = await Posts.findAll({
@@ -32,13 +31,12 @@ const getAllPost = async (req, res) => {
               attributes: ["name"],
               through: { attributes: [] },
             },
-    
           ],
         })
         if(!titulo.length){
           res.status(404).send('No se encontro el titulo');
         }else{
-          console.log(tituloFind)
+          
           res.status(200).json(tituloFind)
         }
        }else{
