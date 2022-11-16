@@ -48,7 +48,7 @@ router.post("/emails/premium",async(req,res)=>{
     try {
         const {name ,email, msg ,id}= req.body
         if (id && name && email){
-            await  hacerPremium(id)
+            await hacerPremium(id)
             let mensage =await sendMailPremium(name,email,msg)
             res.status(200).json({repon : "AHORA SOS PREMIUM ", msg : mensage})
         }else{

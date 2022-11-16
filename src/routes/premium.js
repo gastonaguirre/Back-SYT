@@ -3,13 +3,14 @@ const router = express.Router();
 const mercadopago = require("mercadopago")
 const Stripe = require("stripe");
 const { Users } = require("../db");
+const {sendMailPremium} = require("../controllers/mailer")
 const { MPAGO_ACCESS_TOKEN } = process.env;
 mercadopago.configure({
   access_token: MPAGO_ACCESS_TOKEN,
 })
 const stripe = new Stripe("sk_test_51M4XYbIEql9X77EBzKonxJpaGRoqHvufT3XLhV2sWbGUFenpZ6tsLPMW3Jn5uMirPe96T7OacjD65fsdr0LSwm7M00qKOcsbaT")
 
-async function hacerPremiumStripe(e){
+async function hacerPremium(e){
   try{
       if(e){
           
@@ -70,15 +71,19 @@ router.get('/feedback', async (req, res) => {
 
 router.post("/api/checkout", async (req, res) => {
   try {
-    const { id, amount,userId } = req.body
+    console.log(req.body)
+    const { id, amount, userId , name , email } = req.body
     const payment = await stripe.paymentIntents.create({
       amount,
       currency: "USD",
+      description: "SYT-suscripcion",
       payment_method: id,
       confirm: true,
     })
-    hacerPremiumStripe(userId)
-
+    const msg = payment
+  const userPremiumEmail = await sendMailPremium(name, email,payment)
+  const userpremium =  await  hacerPremium(userId)
+    
     res.send({msg: "Aprobet"})
   } catch (error) {
     

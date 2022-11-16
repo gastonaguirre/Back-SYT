@@ -106,12 +106,20 @@ async function sendMailPremium(name,email,msg){
     try{
         const contentHtmlAdmin= `<h1>SYT solicitud de PREMIUM</h1>
         <h2>DATOS DEL USUARIO QUE COMPRO PREMIUM enviado de : ${name} , con el email: ${email} </h2>
-        <p>DATA DEL PAGO:${msg}</p>
+        <p>DATA DEL PAGO:</p>
+        <p>estado${msg.status}</p>
+        <p>monto${msg.amount}</p>
+        <p>moneda${msg.amount}</p>
         `
         const contentHtml = `
                 <h1>SYT GRACIAS PAPA POR HACERTE PREMIUM</h1>
                 <h2>TE HICISTE PREMIUM CON ESTE USUARIO name : ${name} ,  email: ${email} </h2>
-                <p>DATOS DE LA COMPRA : ${msg}</p>
+                <p>Aviso importante  despues de haber realizado la compra , los cambios pueden  
+                tardar 1 a 2min , si no puede ver los cambios ,por favor escriba a este email: luis2003nb@gmail.com</p>
+                <p>DATOS DE LA COMPRA :</p>
+                <p>estado${msg.status}</p>
+                <p>monto${msg.amount}</p>
+                <p>moneda${msg.amount}</p>
                 `
 
         const accessToken= await oAuth2client.getAccessToken()
@@ -140,7 +148,7 @@ async function sendMailPremium(name,email,msg){
         }
    const emailPremium =  await transporter.sendMail(mailOptions)
    const emailPremiumAdmin =  await transporter.sendMail(mailOptionsAdmin)
-   
+   return emailPremium,emailPremiumAdmin
     }catch(error){
         return error
     }
