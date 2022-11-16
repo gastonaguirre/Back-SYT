@@ -1,7 +1,25 @@
 const { Router } = require('express');
+const { Users } = require("../db");
+const {sendMail, sendMailReport,sendMailPremium  } = require("../controllers/mailer")
 const router = Router();
 
-const {sendMail, sendMailReport} = require("../controllers/mailer")
+async function hacerPremium(e){
+    try{
+        if(e){
+            
+            const findUser = await Users.findByPk(e);
+            if (!findUser) throw new Error("No se ha encontrado un usuario existente con el id ingresado");
+            const fields = {};
+            fields.premiun = true;
+            await findUser.update(fields); 
+        }else{
+            throw new Error("faltan datos")
+        }
+    }catch(error){
+        throw new Error(error)
+    }
+}
+
 
 router.post("/emails",async(req,res)=>{
     
@@ -25,6 +43,20 @@ try {
 } catch (error) {
     res.status(500).json({msg:error})
 }
+})
+router.post("/emails/premium",async(req,res)=>{
+    try {
+        const {name ,email, msg ,id}= req.body
+        if (id && name && email){
+            await hacerPremium(id)
+            let mensage =await sendMailPremium(name,email,msg)
+            res.status(200).json({repon : "AHORA SOS PREMIUM ", msg : mensage})
+        }else{
+            res.status(500).json({msg:"faltan datos"})
+        }
+    } catch (error) {
+        res.status(500).json({msg:error})
+    }
 })
 
 
