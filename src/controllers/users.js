@@ -1,7 +1,5 @@
 const { Users, Posts, Categories } = require("../db");
-const { post } = require("../routes");
 const {deleteUser} = require("../controllers/userFunction.js");
-const {sendMailPremium}= require("../controllers/mailer")
 const {sendMail} = require("./mailer")
 const getUsers = async (req, res) => {
   try {
