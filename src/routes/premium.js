@@ -27,6 +27,7 @@ async function hacerPremium(e){
 
 
 
+
 router.post("/api/checkout", async (req, res) => {
   try {
     console.log(req.body)
