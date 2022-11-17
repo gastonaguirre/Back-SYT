@@ -2,9 +2,9 @@ require('dotenv').config();
 const { Sequelize } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
-const { PGDATABASE,PGHOST ,PGPASSWORD ,PGPORT, PGUSER, DB_USER ,DB_PASSWORD,DB_HOST} = process.env;
+const { PGDATABASE,PGHOST ,PGPASSWORD ,PGPORT, PGUSER} = process.env;
 const pg = require("pg")
-let sequelize =  new Sequelize(`postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/syt`, {
+let sequelize =  new Sequelize(`postgresql://${ PGUSER }:${ PGPASSWORD }@${ PGHOST }:${ PGPORT }/${ PGDATABASE }`, {
         logging: false,
         native: false,
         dialectModule:pg
@@ -40,7 +40,6 @@ Posts.belongsTo(Users);
 
 Posts.belongsToMany(Categories, {through: "posts_categories"})
 Categories.belongsToMany(Posts, {through: "posts_categories"})
-
 
 
 
