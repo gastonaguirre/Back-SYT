@@ -53,20 +53,6 @@ router.post("/pay", async (req, res) => {
   }
   // En esta instancia deberás asignar el valor dentro de response.body.id por el ID de preferencia solicitado en el siguiente paso
 })
-router.get('/feedback', async (req, res) => {
-
-  if (req.query) {
-    const resul = req.query.collection_status
-    console.log(resul)
-    res.status(200).send({
-      msg: "todo bien pa ahi reviso de paga",
-      Status: resul,
-    });
-  } else {
-    res.status(500).send({ msg: "TODO MAL OTRA VEZ" })
-  }
-
-});
 
 
 router.post("/api/checkout", async (req, res) => {
