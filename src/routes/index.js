@@ -2,7 +2,7 @@ const { Router } = require('express');
 const Users = require('./users')
 const Posts = require('./posts')
 const Categories = require('./categories')
-const userInactivo = require('./userinactivo')
+const userInactivo = require('./userInactivo')
 const Emails = require("./email")
 
 const Premium = require('./premium')
