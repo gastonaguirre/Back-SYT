@@ -1,6 +1,7 @@
 const { Users, Posts, Categories } = require("../db");
 const { post } = require("../routes");
-const {deleteUser} = require("../controllers/userFunction.js")
+const {deleteUser} = require("../controllers/userFunction.js");
+const {sendMailPremium}= require("../controllers/mailer")
 const {sendMail} = require("./mailer")
 const getUsers = async (req, res) => {
   try {
@@ -171,7 +172,6 @@ const userPremiun =async (req, res)=>{
 
   }catch(error){
     res.status(400).json({msg:error.msg}) 
-    console.log(error)
   }
 }
 const userAdmin =async(req,res)=>{
